@@ -3,7 +3,6 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Checker from "@/components/checker";
 import ChapterHeader, { type CollagePiece } from "@/components/chapter-header";
-import FigureFlipper from "@/components/figure-flipper";
 import PaperPanel, { type PanelTint } from "@/components/paper-panel";
 import PrevNext from "@/components/prev-next";
 import ReadingControls from "@/components/reading-controls";
@@ -155,6 +154,110 @@ export default async function PostPage({
 
   const runningHead = `CH. ${n} // ${post.title.toUpperCase()}`;
 
+  let figCount = 0;
+  let bandRun = 0;
+  const spreads = post.sections.map((section, i) => {
+    const textLen = section.html.replace(/<[^>]+>/g, "").trim().length;
+    const hasProse = textLen > 0;
+    const prose = hasProse ? (
+      <div
+        className="prose-book"
+        dangerouslySetInnerHTML={{ __html: section.html }}
+      />
+    ) : null;
+
+    if (!section.figure) {
+      if (!prose) return null;
+      return (
+        <section key={i} className="mx-auto mb-24 w-[min(720px,92vw)]">
+          {prose}
+        </section>
+      );
+    }
+
+    figCount += 1;
+    const m = figCount;
+    const r = m % 2 === 1 ? -1.4 : 1.2;
+    // reader-first cadence: the text keeps one home side per chapter, the
+    // full-width band lands as punctuation, the mirrored spread appears once
+    // per cycle. Very short passages take the band rather than sit sparse
+    // beside a tall figure — but never more than two bands in a row, so
+    // image-heavy chapters keep a spread rhythm instead of a wall of plates.
+    const homeSide = n % 2 === 0 ? 0 : 1;
+    const cadence = n % 2 === 0 ? [0, 2, 0, 1] : [1, 2, 1, 0];
+    let variant = !prose || textLen < 220 ? 2 : cadence[(m - 1) % 4];
+    if (variant === 2 && bandRun >= 2) variant = homeSide;
+    bandRun = variant === 2 ? bandRun + 1 : 0;
+    const cap =
+      section.figure.caption?.toUpperCase() ??
+      (i === 0 ? post.title.toUpperCase() : null);
+
+    const figure = (
+      <div
+        className="frame fig-hover relative"
+        data-fx-drift="30"
+        data-rot={r}
+        style={{ transform: `rotate(${r}deg)` }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={section.figure.src}
+          alt={section.figure.caption ?? post.title}
+          className={
+            variant === 2
+              ? "h-auto max-h-[70svh] w-full object-cover"
+              : "h-auto w-full"
+          }
+        />
+        <span className="fig-chip">
+          <em>
+            fig {n}.{m}
+          </em>
+          {cap && <>—{cap}</>}
+        </span>
+      </div>
+    );
+
+    if (variant === 0) {
+      return (
+        <section
+          key={i}
+          className="mx-auto mb-24 grid w-[min(1300px,94vw)] grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1px_1.1fr] lg:gap-14"
+        >
+          <div>
+            <div className="lg:sticky lg:top-24">{figure}</div>
+          </div>
+          <div className="gutter-rule hidden lg:block" />
+          <div>{prose}</div>
+        </section>
+      );
+    }
+
+    if (variant === 1) {
+      return (
+        <section
+          key={i}
+          className="mx-auto mb-24 grid w-[min(1300px,94vw)] grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1px_0.9fr] lg:gap-14"
+        >
+          <div>{prose}</div>
+          <div className="gutter-rule hidden lg:block" />
+          <div className="order-first lg:order-none">
+            <div className="lg:sticky lg:top-24">{figure}</div>
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <section key={i} className="mx-auto mb-24 w-[min(1100px,94vw)]">
+        {figure}
+        {prose && (
+          <div className="mx-auto mt-12 w-[min(720px,100%)]">{prose}</div>
+        )}
+      </section>
+    );
+  });
+
   return (
     <main>
       <ChapterHeader
@@ -190,71 +293,64 @@ export default async function PostPage({
         </PaperPanel>
       </section>
 
-      {/* book spread */}
-      <section className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 pb-32 lg:grid-cols-[0.9fr_1px_1.1fr] lg:gap-14">
-        {/* figures column */}
-        <aside className="relative hidden lg:block">
-          <div className="sticky top-14 pb-10">
-            <FigureFlipper figures={post.figures} chapter={n} title={post.title} />
-          </div>
-        </aside>
+      {/* running head */}
+      <div className="mx-auto w-[min(1300px,94vw)]">
+        <div className="mono-label flex items-center justify-between gap-4 border-b border-dotted border-ink-2/40 pb-3">
+          <span className="inline-flex items-center gap-3">
+            <Checker />
+            CH. {n} // <span className="underline underline-offset-4">{post.title.toUpperCase()}</span>
+          </span>
+          <span className="hidden sm:inline">BY LORENZO SCARDICCHIO</span>
+        </div>
 
-        <div className="gutter-rule hidden lg:block" />
+        <div className="mt-10">
+          <ReadingControls />
+        </div>
+      </div>
 
-        {/* text column */}
-        <article>
-          <div className="mono-label flex items-center justify-between gap-4 border-b border-dotted border-ink-2/40 pb-3">
-            <span className="inline-flex items-center gap-3">
-              <Checker />
-              CH. {n} // <span className="underline underline-offset-4">{post.title.toUpperCase()}</span>
-            </span>
-            <span className="hidden sm:inline">BY LORENZO SCARDICCHIO</span>
-          </div>
+      {/* chapter title */}
+      <div className="mx-auto w-[min(720px,92vw)]">
+        <h2
+          className="mt-12 mb-16 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[380]"
+          style={{ fontVariationSettings: "'opsz' 100" }}
+          data-fx-reveal
+        >
+          {post.title}
+        </h2>
+      </div>
 
-          {/* mobile cover */}
-          {post.leadImage && (
-            <div className="frame mt-8 lg:hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={post.leadImage} alt={post.title} />
-            </div>
-          )}
-
-          <div className="mt-10">
-            <ReadingControls />
-          </div>
-
-          <h2
-            className="mt-12 mb-10 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[380]"
-            style={{ fontVariationSettings: "'opsz' 100" }}
-            data-fx-reveal
-          >
-            {post.title}
-          </h2>
-
+      {/* spreads */}
+      {post.sections.length > 0 ? (
+        spreads
+      ) : (
+        <section className="mx-auto mb-24 w-[min(720px,92vw)]">
           <div
             className="prose-book"
             dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
           />
+        </section>
+      )}
 
-          <div className="mt-20 flex justify-center">
-            <pre className="ascii ascii-sm text-ink-2/80" aria-hidden>
-              {ascii.fin}
-            </pre>
-          </div>
+      {/* fin */}
+      <section className="mx-auto w-[min(720px,92vw)] pb-32">
+        <div className="flex justify-center">
+          <pre className="ascii ascii-sm text-ink-2/80" aria-hidden>
+            {ascii.fin}
+          </pre>
+        </div>
 
-          <div className="mt-10">
-            <div className="mono-label mb-4 text-center">SHARE THIS CHAPTER</div>
-            <ShareRow title={post.title} />
-          </div>
+        <div className="mt-10">
+          <div className="mono-label mb-4 text-center">SHARE THIS CHAPTER</div>
+          <ShareRow title={post.title} />
+        </div>
 
-          <div className="mono-label mt-6 text-center text-ink-2/60">
-            FIRST PUBLISHED ON{" "}
-            <a href={post.canonical} target="_blank" rel="noreferrer">
-              SUBSTACK
-            </a>{" "}
-            — {formatDate(post.date)}
-          </div>
-        </article>
+        <div className="mono-label mt-6 text-center text-ink-2/60">
+          FIRST PUBLISHED ON{" "}
+          <a href={post.canonical} target="_blank" rel="noreferrer">
+            SUBSTACK
+          </a>{" "}
+          — {formatDate(post.date)}
+        </div>
       </section>
 
       <PrevNext

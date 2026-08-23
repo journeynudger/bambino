@@ -12,18 +12,28 @@ export type PostMeta = {
   description: string;
 };
 
+/**
+ * One spread of a chapter: an optional figure paired with the prose that
+ * reads alongside it. figure null = text-only section; html may be "" for a
+ * figure-only section.
+ */
+export type PostSection = {
+  figure: { src: string; caption: string | null } | null;
+  html: string;
+};
+
 export type Post = PostMeta & {
   canonical: string;
+  /** the whole document (lead figure lifted out, pull quotes decorated) */
   bodyHtml: string;
-  /** first image if the body opens with one (shown in the figures column instead) */
+  /** first image if the body opens with one (lifted into section 0) */
   leadImage: string | null;
   /**
-   * every article figure, in reading order: the lead (caption null) first if
-   * present, then each inline figure. bodyHtml gets a zero-size
-   * <span data-figanchor="I"></span> before inline figure I so the desktop
-   * flip column knows which figure belongs to the section being read.
+   * the chapter as a sequence of spreads, in reading order. Section 0 is the
+   * opening prose with the lead figure (caption null) when present; each
+   * later section pairs an inline figure with the text that follows it.
    */
-  figures: { src: string; caption: string | null }[];
+  sections: PostSection[];
 };
 
 export type Artwork = {
@@ -68,7 +78,7 @@ export function getPost(slug: string): Post {
   const post = JSON.parse(raw) as Post;
   post.leadImage = null;
 
-  // if the body opens with a figure, lift it out — it belongs in the figures column
+  // if the body opens with a figure, lift it out — it leads section 0
   const lead = post.bodyHtml.match(
     /^\s*<div class="captioned-image-container">[\s\S]*?<\/figure>\s*<\/div>/
   );
@@ -79,32 +89,54 @@ export function getPost(slug: string): Post {
   }
   if (!post.leadImage) post.leadImage = post.cover;
 
-  // walk the remaining inline figures: collect {src, caption} for the flip
-  // column and drop a zero-size anchor before each block (the block itself
-  // stays in the prose — CSS hides it on desktop, mobile keeps it inline)
-  const offset = post.leadImage ? 1 : 0;
-  const inlineFigures: { src: string; caption: string | null }[] = [];
-  post.bodyHtml = post.bodyHtml.replace(
-    /<div class="captioned-image-container">[\s\S]*?<\/figure>\s*<\/div>/g,
-    (block) => {
-      const src = block.match(/src="([^"]+)"/);
-      if (!src) return block;
-      const cap = block.match(
-        /<figcaption class="image-caption">([\s\S]*?)<\/figcaption>/
-      );
-      const caption = cap ? cap[1].replace(/<[^>]+>/g, "").trim() : "";
-      const index = offset + inlineFigures.length;
-      inlineFigures.push({ src: src[1], caption: caption || null });
-      return `<span data-figanchor="${index}"></span>${block}`;
-    }
-  );
-  post.figures = [
-    ...(post.leadImage ? [{ src: post.leadImage, caption: null }] : []),
-    ...inlineFigures,
-  ];
-
   post.bodyHtml = decoratePullQuotes(post.bodyHtml);
+  post.sections = buildSections(post.bodyHtml, post.leadImage);
   return post;
+}
+
+/** Tag-stripped, trimmed text content of an HTML fragment. */
+function textOf(html: string): string {
+  return html.replace(/<[^>]+>/g, "").trim();
+}
+
+/**
+ * Split the (already pull-quote-decorated) body on its figure wrappers and
+ * pair each figure with the prose that follows it. Text-only slivers under
+ * 200 characters merge into the previous section.
+ */
+function buildSections(
+  bodyHtml: string,
+  leadImage: string | null
+): PostSection[] {
+  const parts = bodyHtml.split(
+    /(<div class="captioned-image-container">[\s\S]*?<\/figure>\s*<\/div>)/
+  );
+  const sections: PostSection[] = [];
+
+  const push = (figure: PostSection["figure"], html: string) => {
+    const text = textOf(html);
+    if (!figure && text.length === 0) return;
+    if (!figure && text.length < 200 && sections.length > 0) {
+      sections[sections.length - 1].html += html;
+      return;
+    }
+    sections.push({ figure, html });
+  };
+
+  push(leadImage ? { src: leadImage, caption: null } : null, parts[0]);
+  for (let i = 1; i < parts.length; i += 2) {
+    const block = parts[i];
+    const src = block.match(/src="([^"]+)"/);
+    const cap = block.match(
+      /<figcaption class="image-caption">([\s\S]*?)<\/figcaption>/
+    );
+    const caption = cap ? textOf(cap[1]) : "";
+    push(
+      src ? { src: src[1], caption: caption || null } : null,
+      parts[i + 1] ?? ""
+    );
+  }
+  return sections;
 }
 
 export function getAdjacent(slug: string): {
