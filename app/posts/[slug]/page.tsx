@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
@@ -169,7 +170,7 @@ export default async function PostPage({
     if (!section.figure) {
       if (!prose) return null;
       return (
-        <section key={i} className="mx-auto mb-24 w-[min(720px,92vw)]">
+        <section key={i} className="mx-auto w-[min(720px,92vw)] py-16">
           {prose}
         </section>
       );
@@ -177,7 +178,6 @@ export default async function PostPage({
 
     figCount += 1;
     const m = figCount;
-    const r = m % 2 === 1 ? -1.4 : 1.2;
     // reader-first cadence: the text keeps one home side per chapter, the
     // full-width band lands as punctuation, the mirrored spread appears once
     // per cycle. Very short passages take the band rather than sit sparse
@@ -192,13 +192,10 @@ export default async function PostPage({
       section.figure.caption?.toUpperCase() ??
       (i === 0 ? post.title.toUpperCase() : null);
 
+    // reference prints sit square — clean lines, no rotation in the spreads
+    const crossing = i > 0;
     const figure = (
-      <div
-        className="frame fig-hover relative"
-        data-fx-drift="30"
-        data-rot={r}
-        style={{ transform: `rotate(${r}deg)` }}
-      >
+      <div className="frame fig-hover relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={section.figure.src}
@@ -222,10 +219,14 @@ export default async function PostPage({
       return (
         <section
           key={i}
-          className="mx-auto mb-24 grid w-[min(1300px,94vw)] grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1px_1.1fr] lg:gap-14"
+          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[0.9fr_1px_1.1fr] lg:gap-14"
         >
           <div>
-            <div className="lg:sticky lg:top-24">{figure}</div>
+            <div
+              className={`lg:sticky lg:top-24${crossing ? " relative z-[1] lg:-mt-28" : ""}`}
+            >
+              {figure}
+            </div>
           </div>
           <div className="gutter-rule hidden lg:block" />
           <div>{prose}</div>
@@ -237,20 +238,26 @@ export default async function PostPage({
       return (
         <section
           key={i}
-          className="mx-auto mb-24 grid w-[min(1300px,94vw)] grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1px_0.9fr] lg:gap-14"
+          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[1.1fr_1px_0.9fr] lg:gap-14"
         >
           <div>{prose}</div>
           <div className="gutter-rule hidden lg:block" />
           <div className="order-first lg:order-none">
-            <div className="lg:sticky lg:top-24">{figure}</div>
+            <div
+              className={`lg:sticky lg:top-24${crossing ? " relative z-[1] lg:-mt-28" : ""}`}
+            >
+              {figure}
+            </div>
           </div>
         </section>
       );
     }
 
     return (
-      <section key={i} className="mx-auto mb-24 w-[min(1100px,94vw)]">
-        {figure}
+      <section key={i} className="mx-auto w-[min(1100px,94vw)] py-16">
+        <div className={crossing ? "relative z-[1] lg:-mt-28" : undefined}>
+          {figure}
+        </div>
         {prose && (
           <div className="mx-auto mt-12 w-[min(720px,100%)]">{prose}</div>
         )}
@@ -319,9 +326,14 @@ export default async function PostPage({
         </h2>
       </div>
 
-      {/* spreads */}
+      {/* spreads, divided by full-bleed hairlines the figures straddle */}
       {post.sections.length > 0 ? (
-        spreads
+        spreads.filter(Boolean).map((node, k) => (
+          <Fragment key={`spread-${k}`}>
+            {k > 0 && <div aria-hidden className="h-px w-full bg-ink-2/20" />}
+            {node}
+          </Fragment>
+        ))
       ) : (
         <section className="mx-auto mb-24 w-[min(720px,92vw)]">
           <div
