@@ -1,17 +1,8 @@
 import Checker from "@/components/checker";
+import CollageCluster, { type ClusterPiece } from "@/components/collage-cluster";
 import { displayTitle } from "@/lib/typo";
 
-export type CollagePiece = {
-  src: string;
-  /** css width, e.g. "34%" */
-  w: string;
-  /** css position */
-  left?: string;
-  right?: string;
-  top: string;
-  rot: number;
-  ink?: boolean;
-};
+export type { ClusterPiece as CollagePiece } from "@/components/collage-cluster";
 
 /**
  * Full-viewport chapter opening: mono running head, giant display title,
@@ -28,7 +19,7 @@ export default function ChapterHeader({
   title: string;
   runningHead: string;
   byline?: string;
-  pieces: CollagePiece[];
+  pieces: ClusterPiece[];
 }) {
   return (
     <header className="relative h-[108svh]">
@@ -50,29 +41,7 @@ export default function ChapterHeader({
         </div>
 
         {/* collage */}
-        <div
-          data-fx-parallax
-          className="pointer-events-none absolute inset-0 z-0"
-        >
-          {pieces.map((p, i) => (
-            <div
-              key={i}
-              data-rot={p.rot}
-              className={p.ink ? "absolute ink-invert" : "frame absolute"}
-              style={{
-                width: p.w,
-                left: p.left,
-                right: p.right,
-                top: p.top,
-                transform: `rotate(${p.rot}deg)`,
-              }}
-            >
-              {/* collage prints are decorative */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.src} alt="" loading="eager" />
-            </div>
-          ))}
-        </div>
+        <CollageCluster pieces={pieces} parallax />
 
         {/* title */}
         <div className="relative z-10 mx-auto mt-[16svh] w-full max-w-5xl px-4 text-center sm:px-8">

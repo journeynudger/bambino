@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Checker from "@/components/checker";
+import CollageCluster, { type ClusterPiece } from "@/components/collage-cluster";
 import PaperPanel from "@/components/paper-panel";
 import {
   artByCategory,
@@ -17,6 +18,51 @@ export default function Cover() {
   const paintings = pick(artByCategory("painting"), "cover", 3);
   const djPhoto = artByCategory("photo").find((a) => a.file.includes("bambino_dj"));
 
+  const heroPieces: ClusterPiece[] = [];
+  if (paintings[0]) {
+    heroPieces.push({
+      src: paintings[0].file,
+      w: "min(26%, 330px)",
+      left: "3%",
+      top: "50%",
+      rot: -2.5,
+      z: 2,
+    });
+  }
+  if (paintings[1]) {
+    heroPieces.push({
+      src: paintings[1].file,
+      w: "min(22%, 280px)",
+      right: "5%",
+      top: "36%",
+      rot: 2,
+      z: 2,
+    });
+  }
+  if (paintings[2]) {
+    heroPieces.push({
+      src: paintings[2].file,
+      w: "min(14%, 190px)",
+      left: "20%",
+      top: "24%",
+      rot: -1.2,
+      z: 1,
+      variant: "torn",
+    });
+  }
+  if (djPhoto) {
+    heroPieces.push({
+      src: "/art/IMG_5663.jpg",
+      w: "min(15%, 200px)",
+      right: "18%",
+      top: "58%",
+      rot: 1.5,
+      z: 1,
+      variant: "dither",
+      aspect: "3 / 4",
+    });
+  }
+
   return (
     <main>
       {/* ————— cover spread ————— */}
@@ -32,50 +78,23 @@ export default function Cover() {
           </div>
 
           {/* collage */}
-          <div data-fx-parallax className="pointer-events-none absolute inset-0 z-0">
-            {paintings[0] && (
-              <div
-                data-rot="-2.5"
-                className="frame absolute"
-                style={{ width: "min(30%, 380px)", left: "5%", top: "44%" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={paintings[0].file} alt="" loading="eager" />
-              </div>
-            )}
-            {paintings[1] && (
-              <div
-                data-rot="2"
-                className="frame absolute"
-                style={{ width: "min(24%, 300px)", right: "6%", top: "38%" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={paintings[1].file} alt="" loading="eager" />
-              </div>
-            )}
-            {paintings[2] && (
-              <div
-                data-rot="-1.5"
-                className="frame absolute"
-                style={{ width: "min(15%, 200px)", left: "9%", top: "10%" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={paintings[2].file} alt="" loading="eager" />
-              </div>
-            )}
-          </div>
+          <CollageCluster
+            pieces={heroPieces}
+            parallax
+            className="pointer-events-none absolute inset-0 z-0"
+          />
 
           {/* wordmark */}
           <div className="relative z-10 mx-auto mt-[14svh] w-full max-w-6xl px-4 text-center">
             <p className="font-display text-[clamp(1.4rem,3vw,2.4rem)] italic font-[360]">
               The Notebooks of
             </p>
-            <h1 className="isolate mx-auto mt-2 w-[min(680px,82vw)] bg-paper">
+            <h1 className="mx-auto mt-2 w-[min(680px,82vw)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/art/bambino-wordmark.png"
                 alt="bambino"
-                className="mx-auto w-full mix-blend-multiply"
+                className="mx-auto w-full"
               />
             </h1>
             <p className="mono-label mt-2 text-ink-2/80">
@@ -168,20 +187,24 @@ export default function Cover() {
         <div className="mx-auto flex w-[min(980px,94vw)] flex-col items-center gap-10">
           {djPhoto && (
             <div
-              className="frame w-[min(380px,70vw)] !bg-paper"
+              className="frame fig-hover relative w-[min(380px,70vw)]"
               data-fx-drift="30"
               data-rot="-1"
+              style={{ transform: "rotate(-1deg)" }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={djPhoto.file} alt="Lorenzo at the decks" />
-              <div className="mono-label pt-2 text-[0.62rem] text-ink-2/70">
-                fig 00 — BAMBINO, LIVE
-              </div>
+              <span className="fig-chip">
+                <em>fig 00</em>—BAMBINO, LIVE
+              </span>
             </div>
           )}
           <div className="mono-label flex w-full items-center justify-between text-paper/70">
             <Link href="/art" className="hover:text-paper">
               THE FIGURES →
+            </Link>
+            <Link href="/podcast" className="hover:text-paper">
+              THE PODCAST →
             </Link>
             <Link href="/about" className="hover:text-paper">
               COLOPHON →

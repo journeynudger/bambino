@@ -5,6 +5,8 @@ import Checker from "@/components/checker";
 import ChapterHeader, { type CollagePiece } from "@/components/chapter-header";
 import PaperPanel, { type PanelTint } from "@/components/paper-panel";
 import PrevNext from "@/components/prev-next";
+import ReadingControls from "@/components/reading-controls";
+import ShareRow from "@/components/share-row";
 import {
   artByCategory,
   chapterNumber,
@@ -16,6 +18,8 @@ import {
 } from "@/lib/content";
 import { numberWord } from "@/lib/numbers";
 import { pad2 } from "@/lib/typo";
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   const dir = path.join(process.cwd(), "content", "posts");
@@ -52,36 +56,100 @@ export default async function PostPage({
   const ascii = getAscii();
   const tint = TINTS[n % TINTS.length];
 
-  const paintings = pick(artByCategory("painting"), slug + "p", 1);
+  const paintings = pick(artByCategory("painting"), slug + "p", 2);
   const designs = pick(artByCategory("design"), slug + "d", 2);
 
   const pieces: CollagePiece[] = [];
-  if (post.leadImage) {
-    pieces.push({
-      src: post.leadImage,
-      w: "min(34%, 460px)",
-      left: "6%",
-      top: "38%",
-      rot: -3,
-    });
-  }
-  if (paintings[0]) {
-    pieces.push({
-      src: paintings[0].file,
-      w: "min(22%, 300px)",
-      right: "7%",
-      top: "52%",
-      rot: 2.5,
-    });
-  }
-  if (designs[0]) {
-    pieces.push({
-      src: designs[0].file,
-      w: "min(13%, 180px)",
-      left: "10%",
-      top: "8%",
-      rot: -1.8,
-    });
+  if (n % 2 === 0) {
+    if (post.leadImage) {
+      pieces.push({
+        src: post.leadImage,
+        w: "min(32%, 440px)",
+        left: "6%",
+        top: "40%",
+        rot: -2.5,
+        z: 2,
+        figNo: `fig ${pad2(n)}`,
+      });
+    }
+    if (paintings[0]) {
+      pieces.push({
+        src: paintings[0].file,
+        w: "min(20%, 280px)",
+        left: "27%",
+        top: "55%",
+        rot: 2,
+        z: 3,
+      });
+    }
+    if (designs[0]) {
+      pieces.push({
+        src: designs[0].file,
+        w: "min(15%, 210px)",
+        left: "22%",
+        top: "27%",
+        rot: -1.2,
+        z: 1,
+        variant: "torn",
+      });
+    }
+    if (paintings[1]) {
+      pieces.push({
+        src: paintings[1].file,
+        w: "min(18%, 250px)",
+        left: "35%",
+        top: "52%",
+        rot: 1.5,
+        z: 1,
+        variant: "dither",
+        aspect: "4 / 3",
+      });
+    }
+  } else {
+    if (post.leadImage) {
+      pieces.push({
+        src: post.leadImage,
+        w: "min(32%, 440px)",
+        right: "6%",
+        top: "40%",
+        rot: 2.5,
+        z: 2,
+        figNo: `fig ${pad2(n)}`,
+      });
+    }
+    if (paintings[0]) {
+      pieces.push({
+        src: paintings[0].file,
+        w: "min(20%, 280px)",
+        right: "26%",
+        top: "56%",
+        rot: -2,
+        z: 3,
+      });
+    }
+    if (designs[0]) {
+      pieces.push({
+        src: designs[0].file,
+        w: "min(15%, 210px)",
+        right: "23%",
+        top: "28%",
+        rot: 1.2,
+        z: 1,
+        variant: "torn",
+      });
+    }
+    if (paintings[1]) {
+      pieces.push({
+        src: paintings[1].file,
+        w: "min(18%, 250px)",
+        right: "35%",
+        top: "52%",
+        rot: -1.5,
+        z: 1,
+        variant: "dither",
+        aspect: "4 / 3",
+      });
+    }
   }
 
   const runningHead = `CH. ${n} // ${post.title.toUpperCase()}`;
@@ -127,19 +195,27 @@ export default async function PostPage({
         <aside className="relative hidden lg:block">
           <div className="sticky top-14 flex flex-col gap-14 pb-10">
             {post.leadImage && (
-              <div className="frame" data-fx-drift="26" data-rot="-1.6">
+              <div
+                className="frame fig-hover relative"
+                data-fx-drift="26"
+                data-rot="-1.6"
+                style={{ transform: "rotate(-1.6deg)" }}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={post.leadImage} alt={post.title} />
-                <div className="mono-label pt-2 text-[0.62rem] text-ink-2/70">
-                  fig {pad2(n)} — {post.title.toUpperCase()}
-                </div>
+                <span className="fig-chip">
+                  <em>fig {pad2(n)}</em>
+                  {" — "}
+                  {post.title.toUpperCase()}
+                </span>
               </div>
             )}
             {designs[1] && (
               <div
-                className="frame w-2/3 self-end"
+                className="torn w-3/4 self-end -mt-12 mr-2"
                 data-fx-drift="52"
-                data-rot="1.2"
+                data-rot="1.4"
+                style={{ transform: "rotate(1.4deg)" }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={designs[1].file} alt="" />
@@ -168,6 +244,10 @@ export default async function PostPage({
             </div>
           )}
 
+          <div className="mt-10">
+            <ReadingControls />
+          </div>
+
           <h2
             className="mt-12 mb-10 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[380]"
             style={{ fontVariationSettings: "'opsz' 100" }}
@@ -182,10 +262,16 @@ export default async function PostPage({
           />
 
           <div className="mt-20 flex justify-center">
-            <pre className="ascii text-ink-2/80" aria-hidden>
+            <pre className="ascii ascii-sm text-ink-2/80" aria-hidden>
               {ascii.fin}
             </pre>
           </div>
+
+          <div className="mt-10">
+            <div className="mono-label mb-4 text-center">SHARE THIS CHAPTER</div>
+            <ShareRow title={post.title} />
+          </div>
+
           <div className="mono-label mt-6 text-center text-ink-2/60">
             FIRST PUBLISHED ON{" "}
             <a href={post.canonical} target="_blank" rel="noreferrer">

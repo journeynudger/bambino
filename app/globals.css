@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-paper: #efefef;
+  --color-paper: #f2f0ec;
   --color-ink: #111111;
   --color-ink-2: #2d2d2d;
   --color-night: #101216;
@@ -12,7 +12,7 @@
   --color-olive-light: #e3e6d8;
 
   /* shadcn token bridge */
-  --color-background: #efefef;
+  --color-background: #f2f0ec;
   --color-foreground: #2d2d2d;
   --color-muted: #e2e2e2;
   --color-muted-foreground: #6b6b6b;
@@ -20,15 +20,15 @@
   --color-input: #2d2d2d;
   --color-ring: #2d2d2d;
   --color-primary: #2d2d2d;
-  --color-primary-foreground: #efefef;
+  --color-primary-foreground: #f2f0ec;
   --color-secondary: #e2e2e2;
   --color-secondary-foreground: #2d2d2d;
   --color-accent: #e2e2e2;
   --color-accent-foreground: #2d2d2d;
   --color-destructive: #7f1d1d;
-  --color-popover: #efefef;
+  --color-popover: #f2f0ec;
   --color-popover-foreground: #2d2d2d;
-  --color-card: #efefef;
+  --color-card: #f2f0ec;
   --color-card-foreground: #2d2d2d;
 
   --font-display: "Blacker Pro Display", var(--font-fraunces), Georgia, serif;
@@ -62,7 +62,10 @@ html {
 }
 
 body {
-  background: var(--color-paper);
+  background-color: #f2f0ec;
+  /* layered paper texture: fine warm grain + sparse darker flecks */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42 0 0 0 0 0.39 0 0 0 0 0.35 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.12' numOctaves='1' seed='7'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.45 0 0 0 0 0.41 0 0 0 0 0.36 0 0 0 0.9 -0.62'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23f)'/%3E%3C/svg%3E");
   color: var(--color-ink-2);
   font-family: var(--font-source-serif), Georgia, serif;
   -webkit-font-smoothing: antialiased;
@@ -132,7 +135,7 @@ a.mono-label {
 /* ————— book prose ————— */
 .prose-book {
   font-family: var(--font-source-serif), Georgia, serif;
-  font-size: 1.16rem;
+  font-size: calc(1.16rem * var(--prose-scale, 1));
   line-height: 1.62;
   text-align: justify;
   hyphens: auto;
@@ -144,6 +147,21 @@ a.mono-label {
 }
 .prose-book > p + p {
   text-indent: 1.8em;
+}
+
+/* reading prefs: sans-serif body toggle (headings/pull quotes keep the display serif) */
+html.reading-sans .prose-book {
+  font-family: ui-sans-serif, -apple-system, "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  text-align: left;
+  hyphens: none;
+}
+html.reading-sans .prose-book > p + p {
+  text-indent: 0;
+  margin-top: 1em;
+}
+html.reading-sans .prose-book blockquote {
+  text-align: left;
 }
 .prose-book p:first-of-type::first-line {
   letter-spacing: 0.01em;
@@ -208,7 +226,8 @@ a.mono-label {
   font-weight: 380;
   font-size: 1.75em;
   line-height: 1.25;
-  text-align: left;
+  text-align: center;
+  padding-inline: 6%;
   letter-spacing: -0.01em;
   font-variation-settings: "opsz" 40;
 }
@@ -218,9 +237,11 @@ a.mono-label {
 }
 .prose-book blockquote.pull p::before {
   content: "“";
+  margin-left: -0.55em;
 }
 .prose-book blockquote.pull p::after {
   content: "”";
+  margin-right: -0.55em;
 }
 
 /* figures: numbered, framed prints */
@@ -233,33 +254,145 @@ a.mono-label {
   display: block;
   width: 100%;
   height: auto;
-  background: #fff;
-  padding: 10px;
+  background: none;
+  padding: 0;
   box-shadow: 0 1px 2px rgba(17, 17, 17, 0.14), 0 12px 32px rgba(17, 17, 17, 0.13);
 }
 .prose-book figure {
   counter-increment: fig;
   position: relative;
 }
-.prose-book figure::after {
-  content: "fig " counter(fig);
-  display: inline-block;
-  margin-top: 10px;
+.prose-book .captioned-image-container:nth-child(odd of .captioned-image-container) figure {
+  transform: rotate(-0.6deg);
+}
+.prose-book .captioned-image-container:nth-child(even of .captioned-image-container) figure {
+  transform: rotate(0.5deg);
+}
+.prose-book .image-caption {
   font-family: var(--font-paper-mono), ui-monospace, monospace;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: left;
+  text-indent: 0;
+  margin-top: 10px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.prose-book figure:hover .image-caption {
+  opacity: 1;
+}
+.prose-book figure::after {
+  content: "fig " counter(fig);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: auto;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--figx, 18px), var(--figy, 28px)) rotate(var(--figr, 0deg));
+  transition: opacity 160ms ease;
+  will-change: transform;
   background: var(--color-paper);
-  padding: 2px 6px;
+  font-family: "Blacker Pro Display", var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 2px 10px;
+  box-shadow: 0 1px 3px rgba(17, 17, 17, 0.25);
+  z-index: 2;
+}
+.prose-book figure:hover::after {
+  opacity: 1;
 }
 
 /* ————— framed print (collage pieces) ————— */
 .frame {
-  background: #fff;
-  padding: 10px;
+  background: transparent;
+  padding: 0;
   box-shadow: 0 1px 2px rgba(17, 17, 17, 0.16), 0 14px 38px rgba(17, 17, 17, 0.16);
 }
 .frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* caption chip for JSX-authored collage figures — hidden until hover, follows cursor */
+.fig-chip {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: auto;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--figx, 18px), var(--figy, 28px)) rotate(var(--figr, 0deg));
+  transition: opacity 160ms ease;
+  will-change: transform;
+  background: var(--color-paper);
+  padding: 2px 10px;
+  font-family: var(--font-paper-mono), ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(17, 17, 17, 0.25);
+  z-index: 2;
+  white-space: nowrap;
+}
+.fig-hover:hover .fig-chip {
+  opacity: 1;
+}
+
+/* touch devices: no cursor to follow — pin the chips near the top-left corner */
+@media (hover: none) {
+  .prose-book figure::after,
+  .fig-chip {
+    opacity: 1;
+    transform: translate(10px, 12px);
+  }
+  .prose-book .image-caption {
+    opacity: 1;
+  }
+}
+.fig-chip em {
+  font-family: "Blacker Pro Display", var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+}
+
+/* torn-paper collage piece */
+.torn {
+  padding: 0;
+  clip-path: polygon(
+    0.5% 1.1%,
+    9% 0.2%,
+    24% 1.2%,
+    41% 0.3%,
+    58% 1.4%,
+    76% 0.2%,
+    90% 1%,
+    99.5% 0.4%,
+    99% 16%,
+    100% 37%,
+    98.9% 58%,
+    99.7% 79%,
+    99.1% 99.3%,
+    84% 98.9%,
+    66% 99.8%,
+    47% 98.8%,
+    29% 99.7%,
+    12% 99%,
+    0.6% 99.5%,
+    1.3% 81%,
+    0.2% 60%,
+    1% 40%,
+    0.3% 19%
+  );
+  filter: drop-shadow(0 6px 14px rgba(17, 17, 17, 0.22));
+}
+.torn img {
   display: block;
   width: 100%;
   height: auto;
@@ -278,7 +411,12 @@ a.mono-label {
 }
 .unroll-clip {
   position: relative;
+  container-type: inline-size;
   clip-path: inset(-60px -60px calc((1 - var(--unroll)) * 100%) -60px);
+}
+/* the 145-col preamble art must never overflow its parchment */
+.unroll-clip .ascii {
+  font-size: min(0.48rem, 1.08cqi);
 }
 .unroll-roll {
   position: absolute;
@@ -314,16 +452,25 @@ a.mono-label {
 /* ————— ascii art ————— */
 .ascii {
   font-family: var(--font-paper-mono), ui-monospace, monospace;
-  font-size: clamp(0.5rem, 1.5vw, 0.75rem);
-  font-weight: 700;
-  line-height: 1.05;
+  font-size: clamp(0.3rem, 0.72vw, 0.48rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: 0;
   white-space: pre;
   overflow-x: auto;
 }
+.ascii-sm {
+  font-size: clamp(0.4rem, 0.9vw, 0.55rem);
+}
 
 /* ————— scroll fx initial states ————— */
+/* hide-before-reveal only when scripts run, so no-JS visitors still see content */
+@media (scripting: enabled) {
+  [data-fx-reveal] {
+    opacity: 0;
+  }
+}
 [data-fx-reveal] {
-  opacity: 0;
   will-change: transform, opacity;
 }
 [data-fx-header] {

@@ -20,12 +20,15 @@ function prettyTitle(t: string): string {
 
 function Fig({ art, n }: { art: Artwork; n: number }) {
   return (
-    <figure className="frame mb-8 break-inside-avoid" data-fx-reveal>
+    <figure
+      className="frame fig-hover relative mb-8 break-inside-avoid"
+      data-fx-reveal
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={art.file} alt={art.title} className="block w-full" />
-      <figcaption className="mono-label pt-2 text-[0.62rem] text-ink-2/70">
-        fig {pad2(n)} — {prettyTitle(art.title)}
-      </figcaption>
+      <span className="fig-chip">
+        <em>fig {pad2(n)}</em>—{prettyTitle(art.title)}
+      </span>
     </figure>
   );
 }

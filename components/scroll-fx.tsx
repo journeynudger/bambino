@@ -18,18 +18,66 @@ export default function ScrollFX() {
     let raf = 0;
     const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
     const wide = () => window.innerWidth > 900;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // static state: no blur/fade/parallax/drift, everything visible & unrolled
+    const settleStatic = () => {
+      document
+        .querySelectorAll<HTMLElement>("[data-fx-header]")
+        .forEach((el) => {
+          el.style.filter = "";
+          el.style.opacity = "";
+          el.style.visibility = "";
+        });
+      document
+        .querySelectorAll<HTMLElement>("[data-fx-parallax]")
+        .forEach((el) => {
+          Array.from(el.children).forEach((child) => {
+            const c = child as HTMLElement;
+            c.style.transform = `rotate(${c.dataset.rot ?? "0"}deg)`;
+          });
+        });
+      document
+        .querySelectorAll<HTMLElement>("[data-fx-drift]")
+        .forEach((el) => {
+          el.style.transform = `rotate(${el.dataset.rot ?? "0"}deg)`;
+        });
+      document
+        .querySelectorAll<HTMLElement>("[data-fx-unroll]")
+        .forEach((el) => {
+          el.style.removeProperty("--unroll");
+        });
+      document
+        .querySelectorAll<HTMLElement>("[data-fx-reveal]")
+        .forEach((el) => {
+          el.style.opacity = "1";
+          el.style.transform = "";
+        });
+    };
 
     const update = () => {
       raf = 0;
       const vh = window.innerHeight;
       const y = window.scrollY;
 
+      if (reduceMotion.matches) {
+        settleStatic();
+        const rDoc = document.documentElement;
+        const rProg = clamp01(y / Math.max(1, rDoc.scrollHeight - vh));
+        document
+          .querySelectorAll<HTMLElement>("[data-progress]")
+          .forEach((el) => {
+            el.textContent = String(Math.round(rProg * 100)).padStart(2, "0");
+          });
+        return;
+      }
+
       document
         .querySelectorAll<HTMLElement>("[data-fx-header]")
         .forEach((el) => {
           const e = clamp01(y / vh);
           const t = Math.max(0, 1 - e);
-          if (wide()) el.style.filter = `blur(${8 * Math.min(1, e)}px)`;
+          el.style.filter = wide() ? `blur(${8 * Math.min(1, e)}px)` : "";
           el.style.opacity = String(t);
           el.style.visibility = t <= 0 ? "hidden" : "visible";
         });
@@ -62,7 +110,9 @@ export default function ScrollFX() {
           const r = el.getBoundingClientRect();
           const start = vh * 0.92;
           const dist = Math.min(r.height * 1.5, vh * 0.7);
-          const p = clamp01((start - r.top) / dist);
+          // panels already well inside the viewport (short pages) open fully
+          const p =
+            r.top < vh * 0.4 ? 1 : clamp01((start - r.top) / dist);
           const eased = 1 - Math.cos(p * (Math.PI / 2));
           el.style.setProperty("--unroll", String(0.12 + 0.88 * eased));
         });
@@ -90,15 +140,33 @@ export default function ScrollFX() {
       if (!raf) raf = requestAnimationFrame(update);
     };
 
+    // cursor-following figure label — runs even under reduced motion
+    const onMove = (e: MouseEvent) => {
+      const t = e.target as HTMLElement | null;
+      const host = t?.closest?.("figure, .fig-hover") as HTMLElement | null;
+      if (!host) return;
+      const r = host.getBoundingClientRect();
+      const x = Math.min(Math.max(e.clientX - r.left + 16, 8), Math.max(8, r.width - 70));
+      const y = e.clientY - r.top - 30;
+      const rot = Math.max(-6, Math.min(6, (e.movementX || 0) * 0.8));
+      host.style.setProperty("--figx", x + "px");
+      host.style.setProperty("--figy", y + "px");
+      host.style.setProperty("--figr", rot.toFixed(1) + "deg");
+    };
+
     update();
     // fonts/images shift layout after first paint
     const settle = setTimeout(update, 300);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    document.addEventListener("mousemove", onMove, { passive: true });
+    reduceMotion.addEventListener("change", onScroll);
     return () => {
       clearTimeout(settle);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      document.removeEventListener("mousemove", onMove);
+      reduceMotion.removeEventListener("change", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
   }, [pathname]);

@@ -99,6 +99,13 @@ export default function SiteChrome({ posts }: { posts: PostMeta[] }) {
             Figures
           </Link>
           <Link
+            href="/podcast"
+            onClick={() => setOpen(false)}
+            className="border-b border-dotted border-paper/40 py-3 font-display text-2xl italic transition-all hover:pl-2"
+          >
+            The Podcast
+          </Link>
+          <Link
             href="/about"
             onClick={() => setOpen(false)}
             className="border-b border-dotted border-paper/40 py-3 font-display text-2xl italic transition-all hover:pl-2"

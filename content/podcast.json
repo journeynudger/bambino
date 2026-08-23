@@ -1,0 +1,10 @@
+{
+  "_schema": "episodes entries have shape {\"ep\": 1, \"title\": \"...\", \"date\": \"ISO\", \"duration\": \"42MIN\", \"blurb\": \"...\", \"url\": \"https://...\"}",
+  "tagline": "Conversations on attention, technology, and the quiet work of becoming who you want to be.",
+  "platforms": [
+    { "name": "SPOTIFY", "url": "" },
+    { "name": "APPLE PODCASTS", "url": "" },
+    { "name": "YOUTUBE", "url": "" }
+  ],
+  "episodes": []
+}

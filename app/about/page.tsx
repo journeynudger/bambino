@@ -22,16 +22,16 @@ export default function AboutPage() {
 
       <section className="mx-auto mt-16 grid w-[min(1100px,94vw)] grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
-          <div className="frame" data-fx-drift="24" data-rot="-1.4">
+          <div className="frame fig-hover relative" data-fx-drift="24" data-rot="-1.4">
             <DitherImage
               src="/art/IMG_5663.jpg"
               aspect="4 / 5"
               colorBack="#e3e6d8"
               colorFront="#464b36"
             />
-            <div className="mono-label pt-2 text-[0.62rem] text-ink-2/70">
-              fig 00 — THE AUTHOR, SOMEWHERE WITH CHECKERED FLOORS
-            </div>
+            <span className="fig-chip">
+              <em>fig 00</em>—THE AUTHOR, SOMEWHERE WITH CHECKERED FLOORS
+            </span>
           </div>
         </div>
 
