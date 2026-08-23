@@ -1,0 +1,149 @@
+[
+  {
+    "file": "/art/1.png",
+    "title": "1",
+    "category": "design",
+    "w": 810,
+    "h": 1013
+  },
+  {
+    "file": "/art/2.png",
+    "title": "2",
+    "category": "design",
+    "w": 810,
+    "h": 1013
+  },
+  {
+    "file": "/art/3.png",
+    "title": "3",
+    "category": "design",
+    "w": 810,
+    "h": 1013
+  },
+  {
+    "file": "/art/4.png",
+    "title": "4",
+    "category": "design",
+    "w": 810,
+    "h": 1013
+  },
+  {
+    "file": "/art/Journey-Nudge-Designs-2.png",
+    "title": "Journey Nudge Designs (2)",
+    "category": "design",
+    "w": 675,
+    "h": 844
+  },
+  {
+    "file": "/art/Journey-Nudge-Designs-3.png",
+    "title": "Journey Nudge Designs (3)",
+    "category": "design",
+    "w": 810,
+    "h": 1013
+  },
+  {
+    "file": "/art/Journey-Nudge-Designs-4.png",
+    "title": "Journey Nudge Designs (4)",
+    "category": "design",
+    "w": 810,
+    "h": 1013
+  },
+  {
+    "file": "/art/LS_bambinologo.png",
+    "title": "LS_bambinologo",
+    "category": "logo",
+    "w": 1200,
+    "h": 1200
+  },
+  {
+    "file": "/art/Primal-Stairway-Audio-1.png",
+    "title": "Primal Stairway Audio (1)",
+    "category": "logo",
+    "w": 1920,
+    "h": 1080
+  },
+  {
+    "file": "/art/Primal-Stairway-Audio-2.png",
+    "title": "bambino",
+    "category": "logo",
+    "w": 1920,
+    "h": 1080
+  },
+  {
+    "file": "/art/Primal-Stairway-Audio.png",
+    "title": "bambinologo",
+    "category": "logo",
+    "w": 1574,
+    "h": 350
+  },
+  {
+    "file": "/art/10.png",
+    "title": "10",
+    "category": "painting",
+    "w": 1920,
+    "h": 1080
+  },
+  {
+    "file": "/art/11.png",
+    "title": "11",
+    "category": "painting",
+    "w": 1920,
+    "h": 1080
+  },
+  {
+    "file": "/art/12.png",
+    "title": "12",
+    "category": "painting",
+    "w": 1920,
+    "h": 1080
+  },
+  {
+    "file": "/art/13.png",
+    "title": "13",
+    "category": "painting",
+    "w": 1920,
+    "h": 1080
+  },
+  {
+    "file": "/art/Bambino_painting2.png",
+    "title": "Bambino_painting2",
+    "category": "painting",
+    "w": 3432,
+    "h": 2561
+  },
+  {
+    "file": "/art/Bambino_painting3.png",
+    "title": "Bambino_painting3",
+    "category": "painting",
+    "w": 3023,
+    "h": 3824
+  },
+  {
+    "file": "/art/Bambino_paintingbionic.png",
+    "title": "Bambino_paintingbionic",
+    "category": "painting",
+    "w": 3024,
+    "h": 4032
+  },
+  {
+    "file": "/art/IMG_5663.jpg",
+    "title": "IMG_5663",
+    "category": "photo",
+    "w": 1290,
+    "h": 1599
+  },
+  {
+    "file": "/art/Lorenzo_headshot.jpg",
+    "title": "Lorenzo",
+    "category": "photo",
+    "w": 320,
+    "h": 396
+  },
+  {
+    "file": "/art/bambino_dj.png",
+    "title": "bambino_dj",
+    "category": "photo",
+    "w": 3024,
+    "h": 4032
+  }
+]

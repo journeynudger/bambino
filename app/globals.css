@@ -1,0 +1,386 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-paper: #efefef;
+  --color-ink: #111111;
+  --color-ink-2: #2d2d2d;
+  --color-night: #101216;
+  --color-panel-pink: #f2d2ca;
+  --color-panel-green: #c3ddb6;
+  --color-panel-blue: #ccd7e1;
+  --color-olive: #464b36;
+  --color-olive-light: #e3e6d8;
+
+  /* shadcn token bridge */
+  --color-background: #efefef;
+  --color-foreground: #2d2d2d;
+  --color-muted: #e2e2e2;
+  --color-muted-foreground: #6b6b6b;
+  --color-border: #2d2d2d;
+  --color-input: #2d2d2d;
+  --color-ring: #2d2d2d;
+  --color-primary: #2d2d2d;
+  --color-primary-foreground: #efefef;
+  --color-secondary: #e2e2e2;
+  --color-secondary-foreground: #2d2d2d;
+  --color-accent: #e2e2e2;
+  --color-accent-foreground: #2d2d2d;
+  --color-destructive: #7f1d1d;
+  --color-popover: #efefef;
+  --color-popover-foreground: #2d2d2d;
+  --color-card: #efefef;
+  --color-card-foreground: #2d2d2d;
+
+  --font-display: "Blacker Pro Display", var(--font-fraunces), Georgia, serif;
+  --font-serif: var(--font-source-serif);
+  --font-mono: var(--font-paper-mono);
+}
+
+/* ————— Blacker Pro Display (licensed — drop the files into public/fonts/) —————
+   The site uses it automatically when present; Fraunces stands in otherwise. */
+@font-face {
+  font-family: "Blacker Pro Display";
+  src: url("/fonts/BlackerProDisplay-Light.woff2") format("woff2"),
+    url("/fonts/BlackerProDisplay-Light.woff") format("woff"),
+    url("/fonts/BlackerProDisplay-Light.otf") format("opentype");
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Blacker Pro Display";
+  src: url("/fonts/BlackerProDisplay-LightItalic.woff2") format("woff2"),
+    url("/fonts/BlackerProDisplay-LightItalic.woff") format("woff"),
+    url("/fonts/BlackerProDisplay-LightItalic.otf") format("opentype");
+  font-weight: 300 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink-2);
+  font-family: var(--font-source-serif), Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ————— selection: inverted ink, straight from the almanack ————— */
+*:not(.highlighted)::selection {
+  background: #2d2d2d;
+  color: #efefef;
+}
+.night *::selection,
+.night::selection {
+  background: #efefef;
+  color: #101216;
+}
+
+/* ————— highlight sweep ————— */
+.highlighted {
+  position: relative;
+  color: black;
+  animation: animateHighlight 400ms linear forwards;
+  transition: background 500ms, box-shadow 100ms;
+  background-image: linear-gradient(to left, #fff0 50%, #ffff00aa 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  border-radius: 3px;
+}
+.highlighted::selection {
+  background: #ffffff33;
+}
+@keyframes animateHighlight {
+  0% {
+    background-position: right bottom;
+  }
+  100% {
+    background-position: left bottom;
+  }
+}
+
+/* ————— mono labels ————— */
+.mono-label {
+  font-family: var(--font-paper-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 450;
+}
+.mono-label a,
+a.mono-label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* ————— checker rule (hr) ————— */
+.checker-rule {
+  border: 0;
+  margin: 3.5rem auto;
+  height: 10px;
+  width: 70px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='10' viewBox='0 0 70 10'%3E%3Cg fill='%232d2d2d'%3E%3Cpath d='M0 0h2.5v2.5H0zM5 0h2.5v2.5H5zM2.5 2.5H5V5H2.5zM7.5 2.5H10V5H7.5zM0 5h2.5v2.5H0zM5 5h2.5v2.5H5zM2.5 7.5H5V10H2.5zM7.5 7.5H10V10H7.5z'/%3E%3C/g%3E%3Cg fill='%232d2d2d' transform='translate(30)'%3E%3Cpath d='M0 0h2.5v2.5H0zM5 0h2.5v2.5H5zM2.5 2.5H5V5H2.5zM7.5 2.5H10V5H7.5zM0 5h2.5v2.5H0zM5 5h2.5v2.5H5zM2.5 7.5H5V10H2.5zM7.5 7.5H10V10H7.5z'/%3E%3C/g%3E%3Cg fill='%232d2d2d' transform='translate(60)'%3E%3Cpath d='M0 0h2.5v2.5H0zM5 0h2.5v2.5H5zM2.5 2.5H5V5H2.5zM7.5 2.5H10V5H7.5zM0 5h2.5v2.5H0zM5 5h2.5v2.5H5zM2.5 7.5H5V10H2.5zM7.5 7.5H10V10H7.5z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ————— book prose ————— */
+.prose-book {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 1.16rem;
+  line-height: 1.62;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  counter-reset: fig;
+}
+.prose-book > p {
+  margin: 0;
+}
+.prose-book > p + p {
+  text-indent: 1.8em;
+}
+.prose-book p:first-of-type::first-line {
+  letter-spacing: 0.01em;
+}
+.prose-book a {
+  color: inherit;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.prose-book a:hover {
+  text-decoration-style: solid;
+}
+.prose-book em {
+  font-style: italic;
+}
+.prose-book h1,
+.prose-book h2,
+.prose-book h3 {
+  font-family: "Blacker Pro Display", var(--font-fraunces), Georgia, serif;
+  font-weight: 420;
+  line-height: 1.15;
+  text-align: left;
+  margin: 2.6em 0 0.9em;
+  text-indent: 0;
+  font-variation-settings: "opsz" 60;
+}
+.prose-book h1 {
+  font-size: 2rem;
+}
+.prose-book h2 {
+  font-size: 1.7rem;
+}
+.prose-book h3 {
+  font-size: 1.35rem;
+}
+.prose-book hr {
+  border: 0;
+  margin: 3.5rem auto;
+  height: 10px;
+  width: 70px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='10' viewBox='0 0 70 10'%3E%3Cg fill='%232d2d2d'%3E%3Cpath d='M0 0h2.5v2.5H0zM5 0h2.5v2.5H5zM2.5 2.5H5V5H2.5zM7.5 2.5H10V5H7.5zM0 5h2.5v2.5H0zM5 5h2.5v2.5H5zM2.5 7.5H5V10H2.5zM7.5 7.5H10V10H7.5z'/%3E%3C/g%3E%3Cg fill='%232d2d2d' transform='translate(30)'%3E%3Cpath d='M0 0h2.5v2.5H0zM5 0h2.5v2.5H5zM2.5 2.5H5V5H2.5zM7.5 2.5H10V5H7.5zM0 5h2.5v2.5H0zM5 5h2.5v2.5H5zM2.5 7.5H5V10H2.5zM7.5 7.5H10V10H7.5z'/%3E%3C/g%3E%3Cg fill='%232d2d2d' transform='translate(60)'%3E%3Cpath d='M0 0h2.5v2.5H0zM5 0h2.5v2.5H5zM2.5 2.5H5V5H2.5zM7.5 2.5H10V5H7.5zM0 5h2.5v2.5H0zM5 5h2.5v2.5H5zM2.5 7.5H5V10H2.5zM7.5 7.5H10V10H7.5z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* long quotes: indented book excerpt */
+.prose-book blockquote {
+  margin: 1.8em 0 1.8em 2.4em;
+  font-size: 0.96em;
+  text-align: justify;
+}
+.prose-book blockquote p {
+  margin: 0 0 0.8em;
+}
+
+/* short quotes: display pull quote */
+.prose-book blockquote.pull {
+  margin: 2.6em 0;
+  font-family: "Blacker Pro Display", var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 380;
+  font-size: 1.75em;
+  line-height: 1.25;
+  text-align: left;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 40;
+}
+.prose-book blockquote.pull p {
+  margin: 0;
+  text-indent: 0 !important;
+}
+.prose-book blockquote.pull p::before {
+  content: "“";
+}
+.prose-book blockquote.pull p::after {
+  content: "”";
+}
+
+/* figures: numbered, framed prints */
+.prose-book .captioned-image-container,
+.prose-book figure {
+  margin: 2.8em 0;
+  text-indent: 0;
+}
+.prose-book figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(17, 17, 17, 0.14), 0 12px 32px rgba(17, 17, 17, 0.13);
+}
+.prose-book figure {
+  counter-increment: fig;
+  position: relative;
+}
+.prose-book figure::after {
+  content: "fig " counter(fig);
+  display: inline-block;
+  margin-top: 10px;
+  font-family: var(--font-paper-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--color-paper);
+  padding: 2px 6px;
+}
+
+/* ————— framed print (collage pieces) ————— */
+.frame {
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(17, 17, 17, 0.16), 0 14px 38px rgba(17, 17, 17, 0.16);
+}
+.frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* white-ink calligraphy shown on paper */
+.ink-invert {
+  filter: invert(1);
+  opacity: 0.9;
+}
+
+/* ————— unrolling parchment (tinted preamble paper) ————— */
+.unroll {
+  position: relative;
+  --unroll: 1;
+}
+.unroll-clip {
+  position: relative;
+  clip-path: inset(-60px -60px calc((1 - var(--unroll)) * 100%) -60px);
+}
+.unroll-roll {
+  position: absolute;
+  left: -14px;
+  right: -6px;
+  top: calc(var(--unroll) * 100% - 13px);
+  height: 26px;
+  border-radius: 13px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--panel-tint) 88%, #fff) 0%,
+    var(--panel-tint) 42%,
+    color-mix(in srgb, var(--panel-tint) 70%, #000) 100%
+  );
+  box-shadow: 0 10px 22px rgba(17, 17, 17, 0.22);
+  z-index: 3;
+}
+.unroll-roll::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    color-mix(in srgb, var(--panel-tint) 55%, #fff),
+    color-mix(in srgb, var(--panel-tint) 65%, #000)
+  );
+}
+
+/* ————— ascii art ————— */
+.ascii {
+  font-family: var(--font-paper-mono), ui-monospace, monospace;
+  font-size: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-weight: 700;
+  line-height: 1.05;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ————— scroll fx initial states ————— */
+[data-fx-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+[data-fx-header] {
+  will-change: filter, opacity;
+}
+[data-fx-parallax] > * {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-fx-reveal] {
+    opacity: 1;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ————— TOC rows ————— */
+.toc-row {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.05rem 0.4rem;
+  border-bottom: 1px dotted rgba(45, 45, 45, 0.45);
+  transition: background 160ms, color 160ms;
+}
+.toc-row:hover {
+  background: var(--color-ink-2);
+  color: var(--color-paper);
+}
+.toc-row:hover .toc-num {
+  border-color: var(--color-paper);
+}
+.toc-num {
+  font-family: var(--font-paper-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 2px 8px;
+  justify-self: start;
+}
+
+/* ————— night spread ————— */
+.night {
+  background: var(--color-night);
+  color: var(--color-paper);
+}
+
+/* thin dashed vertical column rules, book-gutter style */
+.gutter-rule {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(45, 45, 45, 0.35) 40%,
+    transparent 40%
+  );
+  background-size: 1px 6px;
+  width: 1px;
+}
