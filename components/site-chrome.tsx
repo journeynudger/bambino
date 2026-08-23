@@ -15,6 +15,20 @@ export default function SiteChrome({ posts }: { posts: PostMeta[] }) {
 
   return (
     <>
+      {/* mobile top bar */}
+      <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-ink-2/15 bg-paper/85 px-4 py-2.5 backdrop-blur-sm lg:hidden">
+        <Link href="/" className="mono-label !no-underline">
+          BRICK BY BRICK
+        </Link>
+        <button
+          aria-label="Open index"
+          onClick={() => setOpen(true)}
+          className="cursor-pointer p-1"
+        >
+          <Checker className="size-5" />
+        </button>
+      </div>
+
       {/* bottom bar */}
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex items-end justify-between px-3 pb-2 sm:px-5">
         <Link

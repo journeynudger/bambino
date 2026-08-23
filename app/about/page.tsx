@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="pb-32">
-      <header className="mx-auto w-[min(1100px,94vw)] pt-6">
+      <header className="mx-auto w-[min(1100px,94vw)] pt-20 lg:pt-6">
         <div className="mono-label flex items-center justify-between border-b border-ink-2 pb-3">
           <span className="inline-flex items-center gap-3">
             <Checker /> [ COLOPHON ]
@@ -22,6 +22,9 @@ export default function AboutPage() {
 
       <section className="mx-auto mt-16 grid w-[min(1100px,94vw)] grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
+          <div className="figlabel lg:hidden">
+            <em>fig 00</em> — THE AUTHOR, SOMEWHERE WITH CHECKERED FLOORS
+          </div>
           <div className="frame fig-hover relative" data-fx-drift="24" data-rot="-1.4">
             <DitherImage
               src="/art/IMG_5663.jpg"

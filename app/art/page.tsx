@@ -20,16 +20,18 @@ function prettyTitle(t: string): string {
 
 function Fig({ art, n }: { art: Artwork; n: number }) {
   return (
-    <figure
-      className="frame fig-hover relative mb-8 break-inside-avoid"
-      data-fx-reveal
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={art.file} alt={art.title} className="block w-full" />
-      <span className="fig-chip">
-        <em>fig {pad2(n)}</em>—{prettyTitle(art.title)}
+    <div className="mb-8 break-inside-avoid" data-fx-reveal>
+      <span className="figlabel lg:hidden">
+        <em>fig {pad2(n)}</em> — {prettyTitle(art.title)}
       </span>
-    </figure>
+      <figure className="frame fig-hover relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={art.file} alt={art.title} className="block w-full" />
+        <span className="fig-chip">
+          <em>fig {pad2(n)}</em>—{prettyTitle(art.title)}
+        </span>
+      </figure>
+    </div>
   );
 }
 
@@ -42,7 +44,7 @@ export default function ArtPage() {
 
   return (
     <main className="pb-28">
-      <header className="mx-auto w-[min(1100px,94vw)] pt-6">
+      <header className="mx-auto w-[min(1100px,94vw)] pt-20 lg:pt-6">
         <div className="mono-label flex items-center justify-between border-b border-ink-2 pb-3">
           <span className="inline-flex items-center gap-3">
             <Checker /> [ THE FIGURES ]

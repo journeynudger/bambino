@@ -68,7 +68,7 @@ export default function Cover() {
           data-fx-header
           className="sticky top-0 flex h-[100svh] flex-col overflow-hidden"
         >
-          <div className="mono-label flex items-center justify-center gap-3 px-4 pt-5">
+          <div className="mono-label flex items-center justify-center gap-3 px-4 pt-16 lg:pt-5">
             <Checker />
             <span>[ A JOURNAL OF ESSAYS & ARTWORK ]</span>
             <Checker />

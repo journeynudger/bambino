@@ -280,8 +280,10 @@ html.reading-sans .prose-book blockquote {
   opacity: 0;
   transition: opacity 160ms ease;
 }
-.prose-book figure:hover .image-caption {
-  opacity: 1;
+@media (hover: hover) {
+  .prose-book figure:hover .image-caption {
+    opacity: 1;
+  }
 }
 .prose-book figure::after {
   content: "fig " counter(fig);
@@ -302,8 +304,10 @@ html.reading-sans .prose-book blockquote {
   box-shadow: 0 1px 3px rgba(17, 17, 17, 0.25);
   z-index: 2;
 }
-.prose-book figure:hover::after {
-  opacity: 1;
+@media (hover: hover) {
+  .prose-book figure:hover::after {
+    opacity: 1;
+  }
 }
 
 /* ————— framed print (collage pieces) ————— */
@@ -340,12 +344,16 @@ html.reading-sans .prose-book blockquote {
   z-index: 2;
   white-space: nowrap;
 }
-.fig-hover:hover .fig-chip {
-  opacity: 1;
+@media (hover: hover) {
+  .fig-hover:hover .fig-chip {
+    opacity: 1;
+  }
 }
 
-/* touch devices: no cursor to follow — pin the chips near the top-left corner */
-@media (hover: none) {
+/* touch devices: no cursor to follow — pin the chips near the top-left corner.
+   Phones get static .figlabel lines instead, so this only applies to
+   desktop-sized touch devices. */
+@media (hover: none) and (min-width: 64rem) {
   .prose-book figure::after,
   .fig-chip {
     opacity: 1;
@@ -361,6 +369,28 @@ html.reading-sans .prose-book blockquote {
   text-transform: none;
   letter-spacing: 0;
   font-size: 0.85rem;
+}
+
+/* static caption line announced above a figure (mobile) */
+@layer components {
+  .figlabel {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5ch;
+    margin-bottom: 14px;
+    font-family: var(--font-paper-mono), ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-2);
+  }
+  .figlabel em {
+    font-family: "Blacker Pro Display", var(--font-fraunces), Georgia, serif;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.95rem;
+  }
 }
 
 /* torn-paper collage piece */

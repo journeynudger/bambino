@@ -195,24 +195,32 @@ export default async function PostPage({
     // reference prints sit square — clean lines, no rotation in the spreads
     const crossing = i > 0;
     const figure = (
-      <div className="frame fig-hover relative">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={section.figure.src}
-          alt={section.figure.caption ?? post.title}
-          className={
-            variant === 2
-              ? "h-auto max-h-[70svh] w-full object-cover"
-              : "h-auto w-full"
-          }
-        />
-        <span className="fig-chip">
+      <>
+        <div className="figlabel lg:hidden">
           <em>
             fig {n}.{m}
           </em>
-          {cap && <>—{cap}</>}
-        </span>
-      </div>
+          {cap && <> — {cap}</>}
+        </div>
+        <div className="frame fig-hover relative">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={section.figure.src}
+            alt={section.figure.caption ?? post.title}
+            className={
+              variant === 2
+                ? "h-auto max-h-[70svh] w-full object-cover"
+                : "h-auto w-full"
+            }
+          />
+          <span className="fig-chip">
+            <em>
+              fig {n}.{m}
+            </em>
+            {cap && <>—{cap}</>}
+          </span>
+        </div>
+      </>
     );
 
     if (variant === 0) {
@@ -301,7 +309,7 @@ export default async function PostPage({
       </section>
 
       {/* running head */}
-      <div className="mx-auto w-[min(1300px,94vw)]">
+      <div className="mx-auto w-[min(1300px,94vw)] pt-14 lg:pt-0">
         <div className="mono-label flex items-center justify-between gap-4 border-b border-dotted border-ink-2/40 pb-3">
           <span className="inline-flex items-center gap-3">
             <Checker />
@@ -330,7 +338,12 @@ export default async function PostPage({
       {post.sections.length > 0 ? (
         spreads.filter(Boolean).map((node, k) => (
           <Fragment key={`spread-${k}`}>
-            {k > 0 && <div aria-hidden className="h-px w-full bg-ink-2/20" />}
+            {k > 0 && (
+              <div
+                aria-hidden
+                className="w-full border-t border-dotted border-ink-2/40 lg:border-solid lg:border-ink-2/20"
+              />
+            )}
             {node}
           </Fragment>
         ))
