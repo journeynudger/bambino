@@ -28,13 +28,6 @@
     "h": 1013
   },
   {
-    "file": "/art/Journey-Nudge-Designs-2.png",
-    "title": "Journey Nudge Designs (2)",
-    "category": "design",
-    "w": 675,
-    "h": 844
-  },
-  {
     "file": "/art/Journey-Nudge-Designs-3.png",
     "title": "Journey Nudge Designs (3)",
     "category": "design",
@@ -138,12 +131,5 @@
     "category": "photo",
     "w": 320,
     "h": 396
-  },
-  {
-    "file": "/art/bambino_dj.png",
-    "title": "bambino_dj",
-    "category": "photo",
-    "w": 3024,
-    "h": 4032
   }
 ]

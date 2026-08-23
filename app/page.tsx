@@ -16,7 +16,6 @@ export default function Cover() {
   const total = posts.length;
   const ascii = getAscii();
   const paintings = pick(artByCategory("painting"), "cover", 3);
-  const djPhoto = artByCategory("photo").find((a) => a.file.includes("bambino_dj"));
 
   const heroPieces: ClusterPiece[] = [];
   if (paintings[0]) {
@@ -50,18 +49,16 @@ export default function Cover() {
       variant: "torn",
     });
   }
-  if (djPhoto) {
-    heroPieces.push({
-      src: "/art/IMG_5663.jpg",
-      w: "min(15%, 200px)",
-      right: "18%",
-      top: "58%",
-      rot: 1.5,
-      z: 1,
-      variant: "dither",
-      aspect: "3 / 4",
-    });
-  }
+  heroPieces.push({
+    src: "/art/IMG_5663.jpg",
+    w: "min(15%, 200px)",
+    right: "18%",
+    top: "58%",
+    rot: 1.5,
+    z: 1,
+    variant: "dither",
+    aspect: "3 / 4",
+  });
 
   return (
     <main>
@@ -141,64 +138,100 @@ export default function Cover() {
         </PaperPanel>
       </section>
 
-      {/* ————— table of chapters ————— */}
-      <section className="mx-auto w-[min(980px,94vw)] pb-28">
-        <div className="mono-label mb-6 flex items-center justify-between border-b border-ink-2 pb-3">
+      {/* ————— the newsletter ————— */}
+      <section className="mx-auto w-[min(1100px,94vw)] pb-28">
+        <div className="mono-label flex items-center justify-between border-b border-ink-2 pb-3">
           <span className="inline-flex items-center gap-3">
-            <Checker /> TABLE OF CHAPTERS
+            <Checker /> THE NEWSLETTER
           </span>
           <span>READ IN ANY ORDER</span>
         </div>
 
-        <nav>
-          {posts.map((p, i) => {
-            const n = total - i;
-            return (
-              <Link
-                key={p.slug}
-                href={`/posts/${p.slug}`}
-                className="toc-row group"
-                data-fx-reveal
-              >
-                <span className="toc-num">{pad2(n)}</span>
-                <span>
-                  <span className="block font-display text-[clamp(1.35rem,2.6vw,1.9rem)] leading-tight font-[400]">
-                    {p.title}
-                  </span>
-                  {p.subtitle && (
-                    <span className="mt-1 block font-serif text-sm italic opacity-70">
-                      {p.subtitle}
-                    </span>
+        <div className="mt-10 grid grid-cols-1 gap-14 lg:grid-cols-[1.05fr_1fr]">
+          {posts[0] && (
+            <Link
+              href={`/posts/${posts[0].slug}`}
+              className="group block"
+              data-fx-reveal
+            >
+              {posts[0].cover && (
+                <div className="frame">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={posts[0].cover}
+                    alt={posts[0].title}
+                    className="w-full"
+                  />
+                </div>
+              )}
+              <p className="mono-label mt-6">
+                CH. {pad2(total)} • {formatDate(posts[0].date)} •{" "}
+                {posts[0].readMinutes}MIN READ
+              </p>
+              <h2 className="mt-3 font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05] font-[400] decoration-1 underline-offset-4 group-hover:underline">
+                {posts[0].title}
+              </h2>
+              {posts[0].subtitle && (
+                <p className="mt-3 font-serif italic opacity-70">
+                  {posts[0].subtitle}
+                </p>
+              )}
+              {posts[0].description &&
+                posts[0].description !== posts[0].subtitle && (
+                  <p className="mt-4 max-w-[60ch] font-serif text-[0.98rem] opacity-80">
+                    {posts[0].description}
+                  </p>
+                )}
+            </Link>
+          )}
+
+          <div>
+            {posts.slice(1).map((p, i) => {
+              const n = total - 1 - i;
+              return (
+                <Link
+                  key={p.slug}
+                  href={`/posts/${p.slug}`}
+                  className="group grid grid-cols-[96px_1fr] items-start gap-5 border-b border-dotted border-ink-2/40 py-5"
+                  data-fx-reveal
+                >
+                  {p.cover && (
+                    <div className="frame">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.cover}
+                        alt={p.title}
+                        className="aspect-[4/3] w-full object-cover"
+                      />
+                    </div>
                   )}
-                </span>
-                <span className="mono-label text-right opacity-70">
-                  {p.readMinutes}MIN READ
-                  <br />
-                  {formatDate(p.date)}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
+                  <span>
+                    <span className="mono-label block opacity-70">
+                      CH. {pad2(n)} • {formatDate(p.date)} • {p.readMinutes}
+                      MIN
+                    </span>
+                    <span className="mt-1 block font-display text-[1.35rem] leading-tight font-[400] group-hover:underline">
+                      {p.title}
+                    </span>
+                    {p.subtitle && (
+                      <span className="mt-1 line-clamp-2 block font-serif text-sm italic opacity-70">
+                        {p.subtitle}
+                      </span>
+                    )}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       {/* ————— closing ————— */}
       <section className="night px-6 py-24">
         <div className="mx-auto flex w-[min(980px,94vw)] flex-col items-center gap-10">
-          {djPhoto && (
-            <div
-              className="frame fig-hover relative w-[min(380px,70vw)]"
-              data-fx-drift="30"
-              data-rot="-1"
-              style={{ transform: "rotate(-1deg)" }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={djPhoto.file} alt="Lorenzo at the decks" />
-              <span className="fig-chip">
-                <em>fig 00</em>—BAMBINO, LIVE
-              </span>
-            </div>
-          )}
+          <pre className="ascii ascii-sm text-paper/70" aria-hidden>
+            {ascii.fin}
+          </pre>
           <div className="mono-label flex w-full items-center justify-between text-paper/70">
             <Link href="/art" className="hover:text-paper">
               THE FIGURES →

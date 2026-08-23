@@ -1,10 +1,52 @@
 {
-  "_schema": "episodes entries have shape {\"ep\": 1, \"title\": \"...\", \"date\": \"ISO\", \"duration\": \"42MIN\", \"blurb\": \"...\", \"url\": \"https://...\"}",
+  "_schema": "episode entries: {\"ep\": 1, \"title\": \"...\", \"date\": \"ISO\", \"blurb\": \"...\", \"url\": \"https://...\", \"thumb\": \"/podcast/<id>.jpg or null\"}",
   "tagline": "Conversations on attention, technology, and the quiet work of becoming who you want to be.",
   "platforms": [
-    { "name": "SPOTIFY", "url": "" },
-    { "name": "APPLE PODCASTS", "url": "" },
-    { "name": "YOUTUBE", "url": "" }
+    {
+      "name": "SPOTIFY",
+      "url": ""
+    },
+    {
+      "name": "APPLE PODCASTS",
+      "url": ""
+    },
+    {
+      "name": "YOUTUBE",
+      "url": "https://www.youtube.com/@LorenzosPodcast"
+    }
   ],
-  "episodes": []
+  "episodes": [
+    {
+      "ep": 1,
+      "title": "Meet Journey: A Support System I Wish I Had in School",
+      "date": "2025-06-09T23:03:46+00:00",
+      "blurb": "Hi, I’m Lorenzo—founder of Journey Nudge. For years, I battled depression and anxiety that made getting through school incredibly hard. I often felt overwhelmed, alone, and unsure of where to turn.",
+      "url": "https://www.youtube.com/watch?v=7KUqSm0IKj4",
+      "thumb": "/podcast/7KUqSm0IKj4.jpg"
+    },
+    {
+      "ep": 2,
+      "title": "Phone Addiction, Dopamine, and Why We Can’t Stop Scrolling",
+      "date": "2026-05-05T03:37:11+00:00",
+      "blurb": "In this episode, Lorenzo interviews Dr. Thekla Brumder Ross, a clinical psychologist and addiction medicine expert, about phone addiction, social media addiction, dopamine, digital harm reduction, and the impact of techn",
+      "url": "https://www.youtube.com/watch?v=8vlu85LSEp0",
+      "thumb": "/podcast/8vlu85LSEp0.jpg"
+    },
+    {
+      "ep": 3,
+      "title": "The Anti-Perfection Path to Health: How to Lose Weight Without Hating Your Life",
+      "date": "2026-05-13T23:29:25+00:00",
+      "blurb": "Most people think getting healthy means giving something up - the pasta, the wine, the birthday cake, the dinner with friends. So they white-knuckle a diet for six weeks, snap, and start over Monday.",
+      "url": "https://www.youtube.com/watch?v=rFvMumYvGx0",
+      "thumb": "/podcast/rFvMumYvGx0.jpg"
+    },
+    {
+      "ep": 4,
+      "title": "Imposter Syndrome, Self-Compassion, and the Voice That Won't Shut Up",
+      "date": "2026-07-31T17:12:32+00:00",
+      "blurb": "In this episode, Lorenzo interviews Kimberly Benoit, an ACC certified executive coach and author of We've All Done It: Getting Real About the Role We Each Play in a Toxic Workplace, about imposter syndrome, self-compassi",
+      "url": "https://www.youtube.com/watch?v=0AFb_TMeEG4",
+      "thumb": "/podcast/0AFb_TMeEG4.jpg"
+    }
+  ]
 }

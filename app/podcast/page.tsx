@@ -19,9 +19,9 @@ type Episode = {
   ep: number;
   title: string;
   date: string;
-  duration: string;
   blurb: string;
   url: string;
+  thumb: string | null;
 };
 
 type PodcastContent = {
@@ -40,8 +40,11 @@ function getPodcast(): PodcastContent {
 
 export default function PodcastPage() {
   const podcast = getPodcast();
-  const live = podcast.platforms.filter((p) => p.url);
-  const hasLinks = live.length > 0;
+  const episodes = [...podcast.episodes].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+  const featured = episodes[0];
+  const rest = episodes.slice(1);
 
   return (
     <main className="pb-28">
@@ -67,71 +70,106 @@ export default function PodcastPage() {
 
         {/* platform row */}
         <div className="mt-12 flex flex-wrap items-center gap-4">
-          {hasLinks
-            ? live.map((p) => (
-                <a
-                  key={p.name}
-                  href={p.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mono-label rounded-full border border-ink-2 px-5 py-2 !no-underline transition-colors hover:bg-ink-2 hover:text-paper"
-                >
-                  {p.name} ↗
-                </a>
-              ))
-            : podcast.platforms.map((p) => (
-                <span
-                  key={p.name}
-                  className="mono-label rounded-full border border-ink-2 px-5 py-2 opacity-50"
-                >
-                  {p.name} ↗
-                </span>
-              ))}
-        </div>
-        {!hasLinks && (
-          <div className="mono-label mt-4 text-ink-2/60">
-            PLATFORM LINKS COMING SOON
-          </div>
-        )}
-      </section>
-
-      {podcast.episodes.length > 0 ? (
-        <section className="mx-auto mt-20 w-[min(980px,94vw)]">
-          <div className="mono-label mb-6 flex items-center justify-between border-b border-ink-2 pb-3">
-            <span className="inline-flex items-center gap-3">
-              <Checker /> THE EPISODES
-            </span>
-            <span>{pad2(podcast.episodes.length)} RECORDED</span>
-          </div>
-          <nav>
-            {podcast.episodes.map((e) => (
+          {podcast.platforms.map((p) =>
+            p.url ? (
               <a
-                key={e.ep}
-                href={e.url}
+                key={p.name}
+                href={p.url}
                 target="_blank"
                 rel="noreferrer"
-                className="toc-row group"
-                data-fx-reveal
+                className="mono-label rounded-full border border-ink-2 px-5 py-2 !no-underline transition-colors hover:bg-ink-2 hover:text-paper"
               >
-                <span className="toc-num">{pad2(e.ep)}</span>
-                <span>
-                  <span className="block font-display text-[clamp(1.35rem,2.6vw,1.9rem)] leading-tight font-[400]">
-                    {e.title}
-                  </span>
-                  {e.blurb && (
-                    <span className="mt-1 block font-serif text-sm italic opacity-70">
+                {p.name} ↗
+              </a>
+            ) : (
+              <span
+                key={p.name}
+                className="mono-label rounded-full border border-ink-2 px-5 py-2 opacity-40"
+              >
+                {p.name} ↗
+              </span>
+            )
+          )}
+        </div>
+      </section>
+
+      {episodes.length > 0 ? (
+        <section className="mx-auto w-[min(1100px,94vw)]">
+          {/* featured — latest episode */}
+          <div className="mt-10 border-t border-dotted border-ink-2/40 pt-10">
+            <a
+              href={featured.url}
+              target="_blank"
+              rel="noreferrer"
+              className="group grid grid-cols-1 sm:grid-cols-[minmax(200px,320px)_1fr] gap-8 items-start"
+              data-fx-reveal
+            >
+              {featured.thumb ? (
+                <div className="frame">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    className="w-full"
+                    src={featured.thumb}
+                    alt={featured.title}
+                  />
+                </div>
+              ) : (
+                <div />
+              )}
+              <div>
+                <div className="mono-label">
+                  LATEST EPISODE • EP {pad2(featured.ep)} •{" "}
+                  {formatDate(featured.date)}
+                </div>
+                <h2 className="mt-4 font-display text-[clamp(1.7rem,3.4vw,2.6rem)] leading-[1.1] font-[400] group-hover:underline">
+                  {featured.title}
+                </h2>
+                <p className="mt-4 font-serif opacity-80 max-w-[65ch]">
+                  {featured.blurb}
+                </p>
+              </div>
+            </a>
+          </div>
+
+          {/* older episodes */}
+          {rest.length > 0 && (
+            <nav className="mt-10 border-t border-dotted border-ink-2/40">
+              {rest.map((e) => (
+                <a
+                  key={e.ep}
+                  href={e.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group grid grid-cols-[120px_1fr] gap-6 py-6 items-start border-b border-dotted border-ink-2/40"
+                  data-fx-reveal
+                >
+                  {e.thumb ? (
+                    <div className="frame">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        className="aspect-video w-full object-cover"
+                        src={e.thumb}
+                        alt={e.title}
+                      />
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  <span>
+                    <span className="mono-label block">
+                      EP {pad2(e.ep)} • {formatDate(e.date)}
+                    </span>
+                    <span className="mt-1 block font-display text-[1.3rem] leading-tight font-[400] group-hover:underline">
+                      {e.title}
+                    </span>
+                    <span className="mt-1 block font-serif text-sm opacity-70 line-clamp-2">
                       {e.blurb}
                     </span>
-                  )}
-                </span>
-                <span className="mono-label text-right opacity-70">
-                  {e.duration}
-                  <br />
-                  {formatDate(e.date)}
-                </span>
-              </a>
-            ))}
-          </nav>
+                  </span>
+                </a>
+              ))}
+            </nav>
+          )}
         </section>
       ) : (
         <section className="mx-auto mt-20 w-[min(820px,92vw)]">
