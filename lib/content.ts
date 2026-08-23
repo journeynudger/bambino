@@ -17,6 +17,13 @@ export type Post = PostMeta & {
   bodyHtml: string;
   /** first image if the body opens with one (shown in the figures column instead) */
   leadImage: string | null;
+  /**
+   * every article figure, in reading order: the lead (caption null) first if
+   * present, then each inline figure. bodyHtml gets a zero-size
+   * <span data-figanchor="I"></span> before inline figure I so the desktop
+   * flip column knows which figure belongs to the section being read.
+   */
+  figures: { src: string; caption: string | null }[];
 };
 
 export type Artwork = {
@@ -71,6 +78,30 @@ export function getPost(slug: string): Post {
     post.bodyHtml = post.bodyHtml.slice(lead[0].length);
   }
   if (!post.leadImage) post.leadImage = post.cover;
+
+  // walk the remaining inline figures: collect {src, caption} for the flip
+  // column and drop a zero-size anchor before each block (the block itself
+  // stays in the prose — CSS hides it on desktop, mobile keeps it inline)
+  const offset = post.leadImage ? 1 : 0;
+  const inlineFigures: { src: string; caption: string | null }[] = [];
+  post.bodyHtml = post.bodyHtml.replace(
+    /<div class="captioned-image-container">[\s\S]*?<\/figure>\s*<\/div>/g,
+    (block) => {
+      const src = block.match(/src="([^"]+)"/);
+      if (!src) return block;
+      const cap = block.match(
+        /<figcaption class="image-caption">([\s\S]*?)<\/figcaption>/
+      );
+      const caption = cap ? cap[1].replace(/<[^>]+>/g, "").trim() : "";
+      const index = offset + inlineFigures.length;
+      inlineFigures.push({ src: src[1], caption: caption || null });
+      return `<span data-figanchor="${index}"></span>${block}`;
+    }
+  );
+  post.figures = [
+    ...(post.leadImage ? [{ src: post.leadImage, caption: null }] : []),
+    ...inlineFigures,
+  ];
 
   post.bodyHtml = decoratePullQuotes(post.bodyHtml);
   return post;

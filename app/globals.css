@@ -532,3 +532,30 @@ html.reading-sans .prose-book blockquote {
   background-size: 1px 6px;
   width: 1px;
 }
+
+/* desktop: article figures live in the flip column, not the prose */
+@media (min-width: 1024px) and (scripting: enabled) {
+  .prose-book .captioned-image-container {
+    display: none;
+  }
+}
+
+/* ————— flip column: one figure per section, page-turn transitions ————— */
+.flipfig {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  opacity: 0;
+  transform: translateY(26px) rotate(1.6deg);
+  transition: opacity 520ms ease, transform 520ms ease;
+  pointer-events: none;
+}
+.flipfig.is-active {
+  opacity: 1;
+  transform: translateY(0) rotate(-0.8deg);
+  pointer-events: auto;
+}
+.flipfig.is-past {
+  opacity: 0;
+  transform: translateY(-20px) rotate(-2.2deg);
+}

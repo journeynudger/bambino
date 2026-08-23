@@ -108,7 +108,7 @@ export default function PodcastPage() {
                 <div className="frame">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    className="w-full"
+                    className="aspect-video w-full object-cover"
                     src={featured.thumb}
                     alt={featured.title}
                   />

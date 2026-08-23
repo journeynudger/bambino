@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Checker from "@/components/checker";
 import ChapterHeader, { type CollagePiece } from "@/components/chapter-header";
+import FigureFlipper from "@/components/figure-flipper";
 import PaperPanel, { type PanelTint } from "@/components/paper-panel";
 import PrevNext from "@/components/prev-next";
 import ReadingControls from "@/components/reading-controls";
@@ -193,34 +194,8 @@ export default async function PostPage({
       <section className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 pb-32 lg:grid-cols-[0.9fr_1px_1.1fr] lg:gap-14">
         {/* figures column */}
         <aside className="relative hidden lg:block">
-          <div className="sticky top-14 flex flex-col gap-14 pb-10">
-            {post.leadImage && (
-              <div
-                className="frame fig-hover relative"
-                data-fx-drift="26"
-                data-rot="-1.6"
-                style={{ transform: "rotate(-1.6deg)" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={post.leadImage} alt={post.title} />
-                <span className="fig-chip">
-                  <em>fig {pad2(n)}</em>
-                  {" — "}
-                  {post.title.toUpperCase()}
-                </span>
-              </div>
-            )}
-            {designs[1] && (
-              <div
-                className="torn w-3/4 self-end -mt-12 mr-2"
-                data-fx-drift="52"
-                data-rot="1.4"
-                style={{ transform: "rotate(1.4deg)" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={designs[1].file} alt="" />
-              </div>
-            )}
+          <div className="sticky top-14 pb-10">
+            <FigureFlipper figures={post.figures} chapter={n} title={post.title} />
           </div>
         </aside>
 

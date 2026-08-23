@@ -75,18 +75,30 @@ export default function SiteChrome({ posts }: { posts: PostMeta[] }) {
                 key={p.slug}
                 href={`/posts/${p.slug}`}
                 onClick={() => setOpen(false)}
-                className={`group border-b border-dotted border-paper/40 py-3 transition-all hover:pl-2 ${
+                className={`group grid grid-cols-[56px_1fr] gap-4 items-center border-b border-dotted border-paper/40 py-3 transition-all hover:pl-2 ${
                   active ? "pl-2" : ""
                 }`}
               >
-                <span className="mono-label block text-paper/60">
-                  CH. {pad2(n)} {active && "// READING"}
-                </span>
-                <span className="font-display text-xl leading-snug">
-                  {p.title}
-                </span>
-                <span className="mono-label block pt-1 text-paper/60">
-                  {p.readMinutes}MIN READ
+                {p.cover ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.cover}
+                    alt=""
+                    className="aspect-[4/3] w-full object-cover opacity-90"
+                  />
+                ) : (
+                  <div />
+                )}
+                <span className="block">
+                  <span className="mono-label block text-paper/60">
+                    CH. {pad2(n)} {active && "// READING"}
+                  </span>
+                  <span className="font-display text-xl leading-snug">
+                    {p.title}
+                  </span>
+                  <span className="mono-label block pt-1 text-paper/60">
+                    {p.readMinutes}MIN READ
+                  </span>
                 </span>
               </Link>
             );
