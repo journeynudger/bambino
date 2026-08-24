@@ -10,6 +10,12 @@ import { usePathname } from "next/navigation";
  *  - data-fx-drift       → element drifts with its position in the viewport
  *  - data-fx-reveal      → cosine-eased fade/rise as it enters the viewport
  *  - data-progress       → text node showing reading progress percentage
+ *  - data-fx-footer      → transparent spacer measuring the end-of-chapter
+ *                          reveal; drives [data-footer-inner] in the pinned
+ *                          fixed layer (translate/scale/opacity emergence)
+ *
+ * Plus a gentle wheel-driven lerp (desktop, fine pointers, motion allowed)
+ * for the smooth scroll feel — native scrollTo keeps the pipeline honest.
  */
 export default function ScrollFX() {
   const pathname = usePathname();
@@ -19,6 +25,7 @@ export default function ScrollFX() {
     const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
     const wide = () => window.innerWidth > 900;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = window.matchMedia("(pointer: fine)");
 
     // static state: no blur/fade/parallax/drift, everything visible & unrolled
     const settleStatic = () => {
@@ -52,6 +59,12 @@ export default function ScrollFX() {
         .forEach((el) => {
           el.style.opacity = "1";
           el.style.transform = "";
+        });
+      document
+        .querySelectorAll<HTMLElement>("[data-footer-inner]")
+        .forEach((el) => {
+          el.style.transform = "";
+          el.style.opacity = "";
         });
     };
 
@@ -127,6 +140,26 @@ export default function ScrollFX() {
           el.style.transform = `translateY(${(1 - eased) * 34}px)`;
         });
 
+      document
+        .querySelectorAll<HTMLElement>("[data-fx-footer]")
+        .forEach((el) => {
+          const r = el.getBoundingClientRect();
+          const p = clamp01((vh - r.top) / Math.min(r.height, vh));
+          const eased = 1 - Math.cos(p * (Math.PI / 2));
+          const scope = el.parentElement ?? document;
+          scope
+            .querySelectorAll<HTMLElement>("[data-footer-inner]")
+            .forEach((inner) => {
+              if (!wide()) {
+                inner.style.transform = "";
+                inner.style.opacity = "";
+                return;
+              }
+              inner.style.transform = `translateY(${(1 - eased) * -14}%) scale(${0.94 + 0.06 * eased})`;
+              inner.style.opacity = String(0.35 + 0.65 * eased);
+            });
+        });
+
       const doc = document.documentElement;
       const prog = clamp01(y / Math.max(1, doc.scrollHeight - vh));
       document
@@ -136,8 +169,58 @@ export default function ScrollFX() {
         });
     };
 
+    // smooth wheel-driven lerp — desktop, fine pointers, motion allowed;
+    // native scrollTo fires scroll events, so update() keeps running as-is
+    let target = window.scrollY;
+    let animating = false;
+    let raf2 = 0;
+
     const onScroll = () => {
+      // keep the lerp target honest when scrolling by other means
+      if (!animating) target = window.scrollY;
       if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    const step = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      target = Math.min(max, target);
+      const cur = window.scrollY;
+      const next = cur + (target - cur) * 0.16;
+      if (Math.abs(target - next) < 0.6) {
+        window.scrollTo({ top: target, behavior: "instant" });
+        animating = false;
+        return;
+      }
+      window.scrollTo({ top: next, behavior: "instant" });
+      raf2 = requestAnimationFrame(step);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (reduceMotion.matches || !finePointer.matches || !wide()) return;
+      if (e.ctrlKey || e.metaKey) return; // pinch-zoom
+      if (
+        (e.target as HTMLElement)?.closest?.(
+          "aside, [data-native-scroll], textarea, select"
+        )
+      )
+        return; // panels scroll natively
+      if (e.deltaMode !== 0) return; // line/page-mode mice keep native
+      e.preventDefault();
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      target = Math.min(max, Math.max(0, target + e.deltaY));
+      if (!animating) {
+        animating = true;
+        step();
+      }
+    };
+
+    const onResize = () => {
+      const max = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+      target = Math.min(max, Math.max(0, target));
+      onScroll();
     };
 
     // cursor-following figure label — runs even under reduced motion
@@ -158,16 +241,19 @@ export default function ScrollFX() {
     // fonts/images shift layout after first paint
     const settle = setTimeout(update, 300);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("wheel", onWheel, { passive: false });
     document.addEventListener("mousemove", onMove, { passive: true });
     reduceMotion.addEventListener("change", onScroll);
     return () => {
       clearTimeout(settle);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("wheel", onWheel);
       document.removeEventListener("mousemove", onMove);
       reduceMotion.removeEventListener("change", onScroll);
       if (raf) cancelAnimationFrame(raf);
+      if (raf2) cancelAnimationFrame(raf2);
     };
   }, [pathname]);
 

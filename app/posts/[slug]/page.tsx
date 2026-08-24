@@ -275,108 +275,111 @@ export default async function PostPage({
 
   return (
     <main>
-      <ChapterHeader
-        kicker={`[ CHAPTER ${numberWord(n)} ]`}
-        title={post.title}
-        runningHead={runningHead}
-        pieces={pieces}
-      />
+      {/* the opaque page sheet — scrolls up and away, revealing the pinned spread */}
+      <div className="paper-sheet paper-sheet--lifting relative z-[1] pb-10">
+        <ChapterHeader
+          kicker={`[ CHAPTER ${numberWord(n)} ]`}
+          title={post.title}
+          runningHead={runningHead}
+          pieces={pieces}
+        />
 
-      {/* preamble scroll */}
-      <section className="relative z-10 mx-auto -mt-[14svh] mb-28 w-[min(860px,92vw)] sm:ml-auto sm:mr-[4vw]">
-        <PaperPanel tint={tint} className="px-7 py-9 sm:px-14 sm:py-12">
-          <div className="mono-label flex items-start justify-between gap-6 pb-8">
+        {/* preamble scroll */}
+        <section className="relative z-10 mx-auto -mt-[14svh] mb-28 w-[min(860px,92vw)] sm:ml-auto sm:mr-[4vw]">
+          <PaperPanel tint={tint} className="px-7 py-9 sm:px-14 sm:py-12">
+            <div className="mono-label flex items-start justify-between gap-6 pb-8">
+              <span className="inline-flex items-center gap-3">
+                <Checker />
+                <span>
+                  READ
+                  <br />
+                  {post.readMinutes}MIN
+                </span>
+              </span>
+              <span className="text-right">
+                {formatDate(post.date)}
+                <br />[ FROM THE NOTEBOOK ]
+              </span>
+            </div>
+            <pre className="ascii" aria-hidden>
+              {ascii.preamble}
+            </pre>
+            <div className="prose-book mt-8 text-[1.05rem]">
+              <p>{post.subtitle || post.description}</p>
+            </div>
+          </PaperPanel>
+        </section>
+
+        {/* running head */}
+        <div className="mx-auto w-[min(1300px,94vw)] pt-14 lg:pt-0">
+          <div className="mono-label flex items-center justify-between gap-4 border-b border-dotted border-ink-2/40 pb-3">
             <span className="inline-flex items-center gap-3">
               <Checker />
-              <span>
-                READ
-                <br />
-                {post.readMinutes}MIN
-              </span>
+              CH. {n} // <span className="underline underline-offset-4">{post.title.toUpperCase()}</span>
             </span>
-            <span className="text-right">
-              {formatDate(post.date)}
-              <br />[ FROM THE NOTEBOOK ]
-            </span>
+            <span className="hidden sm:inline">BY LORENZO SCARDICCHIO</span>
           </div>
-          <pre className="ascii" aria-hidden>
-            {ascii.preamble}
-          </pre>
-          <div className="prose-book mt-8 text-[1.05rem]">
-            <p>{post.subtitle || post.description}</p>
-          </div>
-        </PaperPanel>
-      </section>
 
-      {/* running head */}
-      <div className="mx-auto w-[min(1300px,94vw)] pt-14 lg:pt-0">
-        <div className="mono-label flex items-center justify-between gap-4 border-b border-dotted border-ink-2/40 pb-3">
-          <span className="inline-flex items-center gap-3">
-            <Checker />
-            CH. {n} // <span className="underline underline-offset-4">{post.title.toUpperCase()}</span>
-          </span>
-          <span className="hidden sm:inline">BY LORENZO SCARDICCHIO</span>
+          <div className="mt-10">
+            <ReadingControls />
+          </div>
         </div>
 
-        <div className="mt-10">
-          <ReadingControls />
+        {/* chapter title */}
+        <div className="mx-auto w-[min(720px,92vw)]">
+          <h2
+            className="mt-12 mb-16 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[380]"
+            style={{ fontVariationSettings: "'opsz' 100" }}
+            data-fx-reveal
+          >
+            {post.title}
+          </h2>
         </div>
-      </div>
 
-      {/* chapter title */}
-      <div className="mx-auto w-[min(720px,92vw)]">
-        <h2
-          className="mt-12 mb-16 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[380]"
-          style={{ fontVariationSettings: "'opsz' 100" }}
-          data-fx-reveal
-        >
-          {post.title}
-        </h2>
-      </div>
+        {/* spreads, divided by full-bleed hairlines the figures straddle */}
+        {post.sections.length > 0 ? (
+          spreads.filter(Boolean).map((node, k) => (
+            <Fragment key={`spread-${k}`}>
+              {k > 0 && (
+                <div
+                  aria-hidden
+                  className="w-full border-t border-dotted border-ink-2/40 lg:border-solid lg:border-ink-2/20"
+                />
+              )}
+              {node}
+            </Fragment>
+          ))
+        ) : (
+          <section className="mx-auto mb-24 w-[min(720px,92vw)]">
+            <div
+              className="prose-book"
+              dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
+            />
+          </section>
+        )}
 
-      {/* spreads, divided by full-bleed hairlines the figures straddle */}
-      {post.sections.length > 0 ? (
-        spreads.filter(Boolean).map((node, k) => (
-          <Fragment key={`spread-${k}`}>
-            {k > 0 && (
-              <div
-                aria-hidden
-                className="w-full border-t border-dotted border-ink-2/40 lg:border-solid lg:border-ink-2/20"
-              />
-            )}
-            {node}
-          </Fragment>
-        ))
-      ) : (
-        <section className="mx-auto mb-24 w-[min(720px,92vw)]">
-          <div
-            className="prose-book"
-            dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
-          />
+        {/* fin */}
+        <section className="mx-auto w-[min(720px,92vw)] pb-32">
+          <div className="flex justify-center">
+            <pre className="ascii ascii-sm text-ink-2/80" aria-hidden>
+              {ascii.fin}
+            </pre>
+          </div>
+
+          <div className="mt-10">
+            <div className="mono-label mb-4 text-center">SHARE THIS CHAPTER</div>
+            <ShareRow title={post.title} />
+          </div>
+
+          <div className="mono-label mt-6 text-center text-ink-2/60">
+            FIRST PUBLISHED ON{" "}
+            <a href={post.canonical} target="_blank" rel="noreferrer">
+              SUBSTACK
+            </a>{" "}
+            — {formatDate(post.date)}
+          </div>
         </section>
-      )}
-
-      {/* fin */}
-      <section className="mx-auto w-[min(720px,92vw)] pb-32">
-        <div className="flex justify-center">
-          <pre className="ascii ascii-sm text-ink-2/80" aria-hidden>
-            {ascii.fin}
-          </pre>
-        </div>
-
-        <div className="mt-10">
-          <div className="mono-label mb-4 text-center">SHARE THIS CHAPTER</div>
-          <ShareRow title={post.title} />
-        </div>
-
-        <div className="mono-label mt-6 text-center text-ink-2/60">
-          FIRST PUBLISHED ON{" "}
-          <a href={post.canonical} target="_blank" rel="noreferrer">
-            SUBSTACK
-          </a>{" "}
-          — {formatDate(post.date)}
-        </div>
-      </section>
+      </div>
 
       <PrevNext
         prev={prev}
