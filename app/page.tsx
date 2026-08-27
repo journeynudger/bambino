@@ -85,7 +85,7 @@ export default function Cover() {
 
             {/* wordmark */}
             <div className="relative z-10 mx-auto mt-[14svh] w-full max-w-6xl px-4 text-center">
-              <p className="font-display text-[clamp(1.4rem,3vw,2.4rem)] italic font-[360]">
+              <p className="font-display text-[clamp(1.4rem,3vw,2.4rem)] italic font-[400]">
                 The Notebooks of
               </p>
               <h1 className="mx-auto mt-2 w-[min(680px,82vw)]">

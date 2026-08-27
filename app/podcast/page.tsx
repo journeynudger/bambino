@@ -56,8 +56,7 @@ export default function PodcastPage() {
           <span>LISTEN IN ANY ORDER</span>
         </div>
         <h1
-          className="mt-14 mb-16 font-display text-[clamp(3rem,9vw,7rem)] leading-[0.95] font-[380]"
-          style={{ fontVariationSettings: "'opsz' 144" }}
+          className="mt-14 mb-16 font-display text-[clamp(3rem,9vw,7rem)] leading-[0.95] font-[400]"
         >
           The <em>Podcast</em>
         </h1>

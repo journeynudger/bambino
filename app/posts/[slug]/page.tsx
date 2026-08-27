@@ -328,8 +328,7 @@ export default async function PostPage({
         {/* chapter title */}
         <div className="mx-auto w-[min(720px,92vw)]">
           <h2
-            className="mt-12 mb-16 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[380]"
-            style={{ fontVariationSettings: "'opsz' 100" }}
+            className="mt-12 mb-16 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[400]"
             data-fx-reveal
           >
             {post.title}

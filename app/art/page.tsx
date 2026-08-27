@@ -52,8 +52,7 @@ export default function ArtPage() {
           <span>PLATES & PICTURES</span>
         </div>
         <h1
-          className="mt-14 mb-16 font-display text-[clamp(3rem,9vw,7rem)] leading-[0.95] font-[380]"
-          style={{ fontVariationSettings: "'opsz' 144" }}
+          className="mt-14 mb-16 font-display text-[clamp(3rem,9vw,7rem)] leading-[0.95] font-[400]"
         >
           The <em>Figures</em>
         </h1>

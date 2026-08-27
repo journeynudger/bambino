@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Fraunces, Source_Serif_4 } from "next/font/google";
+import { EB_Garamond, Source_Serif_4 } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import ScrollFX from "@/components/scroll-fx";
 import SiteChrome from "@/components/site-chrome";
 import { getPostIndex } from "@/lib/content";
 
-const fraunces = Fraunces({
+// display face: a free revival of Claude Garamond's types (true italic),
+// standing in for a licensed Old Claude / Blacker Pro if those are dropped in
+const ebGaramond = EB_Garamond({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  axes: ["opsz"],
-  variable: "--font-fraunces",
+  variable: "--font-display-serif",
   display: "block",
 });
 
@@ -44,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fraunces.variable} ${sourceSerif.variable} ${paperMono.variable}`}
+        className={`${ebGaramond.variable} ${sourceSerif.variable} ${paperMono.variable}`}
       >
         <ScrollFX />
         {children}

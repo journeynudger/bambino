@@ -27,7 +27,7 @@ export default function PrevNext({
             <div className="relative flex flex-col justify-between border-b border-dotted border-paper/30 p-6 sm:border-b-0 sm:border-r sm:p-10">
               {prev ? (
                 <Link href={`/posts/${prev.slug}`} className="group flex h-full flex-col justify-between gap-16">
-                  <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[380]">
+                  <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[400]">
                     Previous
                     <br />
                     <em>Chapter</em>
@@ -47,7 +47,7 @@ export default function PrevNext({
                 </Link>
               ) : (
                 <Link href="/" className="group flex h-full flex-col justify-between gap-16">
-                  <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[380]">
+                  <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[400]">
                     Back to
                     <br />
                     <em>Cover</em>
@@ -75,7 +75,7 @@ export default function PrevNext({
                       {next.readMinutes}MIN READ
                     </span>
                   </div>
-                  <h2 className="self-end text-right font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[380]">
+                  <h2 className="self-end text-right font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[400]">
                     Next
                     <br />
                     <em>Chapter</em>
@@ -86,7 +86,7 @@ export default function PrevNext({
                   <div className="mono-label text-paper/70">
                     THE END — <span className="group-hover:underline">SEE THE FIGURES</span>
                   </div>
-                  <h2 className="self-end text-right font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[380]">
+                  <h2 className="self-end text-right font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[400]">
                     The
                     <br />
                     <em>Figures</em>

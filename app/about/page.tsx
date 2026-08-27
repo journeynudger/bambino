@@ -40,8 +40,7 @@ export default function AboutPage() {
 
         <div>
           <h1
-            className="font-display text-[clamp(2.6rem,6vw,4.6rem)] leading-[1] font-[380]"
-            style={{ fontVariationSettings: "'opsz' 144" }}
+            className="font-display text-[clamp(2.6rem,6vw,4.6rem)] leading-[1] font-[400]"
           >
             A Portrait <em>of</em>
             <br />

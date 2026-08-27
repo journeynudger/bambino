@@ -46,8 +46,7 @@ export default function ChapterHeader({
         {/* title */}
         <div className="relative z-10 mx-auto mt-[16svh] w-full max-w-5xl px-4 text-center sm:px-8">
           <h1
-            className="font-display text-[clamp(2.6rem,8.5vw,7rem)] leading-[1.02] font-[380] tracking-[-0.015em]"
-            style={{ fontVariationSettings: "'opsz' 144" }}
+            className="font-display text-[clamp(2.6rem,8.5vw,7rem)] leading-[1.02] font-[400] tracking-[-0.015em]"
           >
             {displayTitle(title)}
           </h1>
