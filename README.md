@@ -53,4 +53,19 @@ npm run dev    # local dev on :3000
 npm run build  # static production build
 ```
 
-Deploy: push to GitHub and import the repo in Vercel — zero config needed.
+### Deployment
+
+Live at **https://bambino-five.vercel.app** (Vercel project `bambino`, personal
+scope `journeynudgers-projects`).
+
+The GitHub repo is connected, so **pushing to `main` deploys to production
+automatically** — no CLI step needed. To deploy by hand anyway:
+
+```bash
+npx vercel deploy --prod --scope journeynudgers-projects
+```
+
+Note: Vercel's Deployment Protection is on, so the `*-journeynudgers-projects`
+URLs bounce to an SSO login. The `bambino-five.vercel.app` alias is the public
+one. Turn protection off under Project → Settings → Deployment Protection if you
+want the rest public too.
