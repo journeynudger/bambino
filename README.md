@@ -13,9 +13,9 @@ unrolling parchment preambles, and dark Previous/Next chapter spreads.
   dithered portrait treatment
 - **[Paper Mono](https://github.com/paper-design/paper-mono)** — self-hosted
   variable font (SIL OFL 1.1, license in `app/fonts/`)
-- Display type: **Blacker Pro Display Light** (commercial, Zetafonts). Drop
-  licensed files into `public/fonts/` (see the README there) and the site
-  switches automatically; the open-source **Fraunces** stands in otherwise.
+- Display type: **Old Claude LP** (licensed; roman-only, so italics fall
+  through to **EB Garamond**, a revival of the same Garamond source). Slots for
+  Blacker Pro Display also exist — see `public/fonts/README.txt`.
 - Text: **Source Serif 4** (Google Fonts, loaded at build)
 
 ## Scroll system
@@ -65,7 +65,5 @@ automatically** — no CLI step needed. To deploy by hand anyway:
 npx vercel deploy --prod --scope journeynudgers-projects
 ```
 
-Note: Vercel's Deployment Protection is on, so the `*-journeynudgers-projects`
-URLs bounce to an SSO login. The `bambino-five.vercel.app` alias is the public
-one. Turn protection off under Project → Settings → Deployment Protection if you
-want the rest public too.
+Deployment Protection is off, so every deployment URL is publicly viewable —
+both the `bambino-five.vercel.app` alias and the per-deploy preview URLs.
