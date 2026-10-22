@@ -3,22 +3,19 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
 import Checker from "@/components/checker";
-import ChapterHeader, { type CollagePiece } from "@/components/chapter-header";
+import ChapterHeader from "@/components/chapter-header";
 import PaperPanel, { type PanelTint } from "@/components/paper-panel";
 import PrevNext from "@/components/prev-next";
 import ReadingControls from "@/components/reading-controls";
 import ShareRow from "@/components/share-row";
 import {
-  artByCategory,
   chapterNumber,
   formatDate,
   getAdjacent,
   getAscii,
   getPost,
-  pick,
 } from "@/lib/content";
 import { numberWord } from "@/lib/numbers";
-import { pad2 } from "@/lib/typo";
 
 export const dynamicParams = false;
 
@@ -56,102 +53,6 @@ export default async function PostPage({
   const { prev, next } = getAdjacent(slug);
   const ascii = getAscii();
   const tint = TINTS[n % TINTS.length];
-
-  const paintings = pick(artByCategory("painting"), slug + "p", 2);
-  const designs = pick(artByCategory("design"), slug + "d", 2);
-
-  const pieces: CollagePiece[] = [];
-  if (n % 2 === 0) {
-    if (post.leadImage) {
-      pieces.push({
-        src: post.leadImage,
-        w: "min(32%, 440px)",
-        left: "6%",
-        top: "40%",
-        rot: -2.5,
-        z: 2,
-        figNo: `fig ${pad2(n)}`,
-      });
-    }
-    if (paintings[0]) {
-      pieces.push({
-        src: paintings[0].file,
-        w: "min(20%, 280px)",
-        left: "27%",
-        top: "55%",
-        rot: 2,
-        z: 3,
-      });
-    }
-    if (designs[0]) {
-      pieces.push({
-        src: designs[0].file,
-        w: "min(15%, 210px)",
-        left: "22%",
-        top: "27%",
-        rot: -1.2,
-        z: 1,
-        variant: "torn",
-      });
-    }
-    if (paintings[1]) {
-      pieces.push({
-        src: paintings[1].file,
-        w: "min(18%, 250px)",
-        left: "35%",
-        top: "52%",
-        rot: 1.5,
-        z: 1,
-        variant: "dither",
-        aspect: "4 / 3",
-      });
-    }
-  } else {
-    if (post.leadImage) {
-      pieces.push({
-        src: post.leadImage,
-        w: "min(32%, 440px)",
-        right: "6%",
-        top: "40%",
-        rot: 2.5,
-        z: 2,
-        figNo: `fig ${pad2(n)}`,
-      });
-    }
-    if (paintings[0]) {
-      pieces.push({
-        src: paintings[0].file,
-        w: "min(20%, 280px)",
-        right: "26%",
-        top: "56%",
-        rot: -2,
-        z: 3,
-      });
-    }
-    if (designs[0]) {
-      pieces.push({
-        src: designs[0].file,
-        w: "min(15%, 210px)",
-        right: "23%",
-        top: "28%",
-        rot: 1.2,
-        z: 1,
-        variant: "torn",
-      });
-    }
-    if (paintings[1]) {
-      pieces.push({
-        src: paintings[1].file,
-        w: "min(18%, 250px)",
-        right: "35%",
-        top: "52%",
-        rot: -1.5,
-        z: 1,
-        variant: "dither",
-        aspect: "4 / 3",
-      });
-    }
-  }
 
   const runningHead = `CH. ${n} // ${post.title.toUpperCase()}`;
 
@@ -281,7 +182,6 @@ export default async function PostPage({
           kicker={`[ CHAPTER ${numberWord(n)} ]`}
           title={post.title}
           runningHead={runningHead}
-          pieces={pieces}
         />
 
         {/* preamble scroll */}

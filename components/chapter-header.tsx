@@ -1,25 +1,20 @@
 import Checker from "@/components/checker";
-import CollageCluster, { type ClusterPiece } from "@/components/collage-cluster";
 import { displayTitle } from "@/lib/typo";
 
-export type { ClusterPiece as CollagePiece } from "@/components/collage-cluster";
-
 /**
- * Full-viewport chapter opening: mono running head, giant display title,
- * scattered prints that parallax upward while the whole header blurs out.
+ * Full-viewport chapter opening: mono running head and the giant display
+ * title, nothing else — the whole header blurs out as you scroll.
  */
 export default function ChapterHeader({
   kicker,
   title,
   runningHead,
   byline = "BY LORENZO SCARDICCHIO",
-  pieces,
 }: {
   kicker: string;
   title: string;
   runningHead: string;
   byline?: string;
-  pieces: ClusterPiece[];
 }) {
   return (
     <header className="relative h-[108svh]">
@@ -39,9 +34,6 @@ export default function ChapterHeader({
           </span>
           <span className="hidden text-right sm:block">{byline}</span>
         </div>
-
-        {/* collage */}
-        <CollageCluster pieces={pieces} parallax />
 
         {/* title */}
         <div className="relative z-10 mx-auto mt-[16svh] w-full max-w-5xl px-4 text-center sm:px-8">
