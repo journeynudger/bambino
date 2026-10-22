@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { PostMeta } from "@/lib/content";
-import { pad2 } from "@/lib/typo";
 
 const WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
   "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty"];
@@ -16,25 +15,23 @@ export type Plate = { file: string; title: string };
 /**
  * The chrome, after the Almanack's: a 36px bar across the top (his name,
  * where you are, the progress pill, the index), a 32px bar across the
- * bottom, and the index itself — an open book: the essays as numerals on the
- * left page, with the chapter you point at previewed beneath them; the
- * gallery, the plates, the podcast and about on the right page.
+ * bottom, and the index itself: one clean list on the same paper as the
+ * pages, sliding in from the right — the cover, the essays each with its
+ * plate, then the gallery, the artwork, the podcast and about.
  */
 export default function SiteChrome({ posts, plates }: { posts: PostMeta[]; plates: Plate[] }) {
   const [open, setOpen] = useState(false);
-  const [hovered, setHovered] = useState<string | null>(null);
   const pathname = usePathname();
   const total = posts.length;
 
   // posts arrive newest-first; chapters count from the oldest
   const chapters = posts.map((post, i) => ({ post, n: total - i })).sort((a, b) => a.n - b.n);
   const current = chapters.find((c) => pathname === `/posts/${c.post.slug}`) ?? null;
-  const previewed = chapters.find((c) => c.post.slug === hovered) ?? current ?? chapters[chapters.length - 1] ?? null;
 
   const close = () => setOpen(false);
 
   useEffect(() => {
-    document.body.classList.toggle("book-open", open);
+    document.body.classList.toggle("index-open", open);
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
     window.addEventListener("keydown", onKey);
@@ -94,69 +91,39 @@ export default function SiteChrome({ posts, plates }: { posts: PostMeta[]; plate
         </button>
       </div>
 
-      {/* ——— the index: an open book ——— */}
-      <div className={`book${open ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Index" aria-hidden={!open}>
-        <div className="book-page book-page--left">
-          <h2 className="book-label">Essays</h2>
-          <div className="book-numerals" onMouseLeave={() => setHovered(null)}>
-            {chapters.map(({ post, n }, i) => (
-              <span key={post.slug} className="book-cell">
-                {i > 0 && <span className="slash" aria-hidden>/</span>}
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className={`book-num${current?.post.slug === post.slug ? " is-current" : ""}${hovered === post.slug ? " is-hover" : ""}`}
-                  onMouseEnter={() => setHovered(post.slug)}
-                  onFocus={() => setHovered(post.slug)}
-                  onClick={close}
-                  aria-label={`Chapter ${n}: ${post.title}`}
-                >
-                  <span>{pad2(n)}</span>
-                </Link>
-              </span>
-            ))}
-          </div>
-          {previewed && (
-            <Link href={`/posts/${previewed.post.slug}`} className="book-preview" onClick={close}>
-              <span className="book-preview-text">
-                <span className="book-hl">Chapter {word(previewed.n)}:</span>
-                <br />
-                <span className="book-hl">{previewed.post.title}</span>
-                {previewed.post.subtitle && <span className="book-sub">{previewed.post.subtitle}</span>}
-                <span className="book-meta">Ch. {pad2(previewed.n)} &middot; {previewed.post.readMinutes}min read</span>
-              </span>
-              {previewed.post.cover && <img src={previewed.post.cover} alt="" className="book-preview-fig" />}
+      {/* ——— the index: one clean list, on paper, from the right ——— */}
+      <div className={`index-veil${open ? " is-open" : ""}`} onClick={close} aria-hidden />
+      <aside className={`index paper-sheet${open ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Index" aria-hidden={!open}>
+        <nav className="index-list">
+          <Link href="/" className="index-row index-row--page" onClick={close}>The Cover</Link>
+
+          <span className="index-label">Essays</span>
+          {chapters.map(({ post }) => (
+            <Link
+              key={post.slug}
+              href={`/posts/${post.slug}`}
+              className={`index-row${current?.post.slug === post.slug ? " is-current" : ""}`}
+              onClick={close}
+            >
+              {post.cover ? <img src={post.cover} alt="" className="index-thumb" /> : <span className="index-thumb" />}
+              <span className="index-title">{post.title}</span>
+              <span className="index-meta">{post.readMinutes}min</span>
             </Link>
-          )}
-        </div>
+          ))}
 
-        <div className="book-gutter" aria-hidden />
-
-        <div className="book-page book-page--right">
-          <h2 className="book-label">Artwork, <em>the</em> Podcast, <em>and</em> About</h2>
-          <Link href="/gallery" className="book-item">
-            <span>The <em>Gallery</em></span>
+          <span className="index-label">Pages</span>
+          <Link href="/gallery" className="index-row index-row--page">
+            <span className="index-title">Gallery</span>
             {plates.length > 0 && (
-              <span className="book-plates">
-                {plates.map((p) => <img key={p.file} src={p.file} alt={p.title} />)}
-              </span>
+              <span className="index-plates">{plates.map((p) => <img key={p.file} src={p.file} alt={p.title} />)}</span>
             )}
           </Link>
-          <Link href="/art" className="book-item book-item--r" onClick={close}><span>Artwork <em>plates</em></span></Link>
-          <Link href="/podcast" className="book-item" onClick={close}><span>The <em>Podcast</em></span></Link>
-          <Link href="/about" className="book-item book-item--r" onClick={close}><span>About <em>Lorenzo</em></span></Link>
-          <div className="book-foot">
-            <div>
-              <h3 className="book-label">Back <em>matter</em></h3>
-              <Link href="/" className="book-small" onClick={close}>The Cover</Link>
-              <Link href="/#essays" className="book-small" onClick={close}>Every Essay</Link>
-            </div>
-            <div className="book-formats">
-              <h3 className="book-label"><em>Elsewhere</em></h3>
-              <a href="https://lorenzoscardicchio.substack.com" target="_blank" rel="noreferrer" className="book-small">[ Substack ]</a>
-            </div>
-          </div>
-        </div>
-      </div>
+          <Link href="/art" className="index-row index-row--page" onClick={close}>Artwork</Link>
+          <Link href="/podcast" className="index-row index-row--page" onClick={close}>Podcast</Link>
+          <Link href="/about" className="index-row index-row--page" onClick={close}>About</Link>
+          <a href="https://lorenzoscardicchio.substack.com" target="_blank" rel="noreferrer" className="index-row index-row--page">Substack ↗</a>
+        </nav>
+      </aside>
     </>
   );
 }
