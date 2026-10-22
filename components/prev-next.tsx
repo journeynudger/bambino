@@ -53,7 +53,7 @@ export default function PrevNext({
                     <em>Cover</em>
                   </h2>
                   <div className="mono-label text-paper/70">
-                    BAMBINO — <span className="group-hover:underline">THE COVER</span>
+                    LORENZO — <span className="group-hover:underline">THE COVER</span>
                   </div>
                 </Link>
               )}
@@ -84,12 +84,12 @@ export default function PrevNext({
               ) : (
                 <Link href="/art" className="group flex h-full flex-col justify-between gap-16">
                   <div className="mono-label text-paper/70">
-                    THE END — <span className="group-hover:underline">SEE THE FIGURES</span>
+                    THE END — <span className="group-hover:underline">SEE THE ARTWORK</span>
                   </div>
                   <h2 className="self-end text-right font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-[400]">
                     The
                     <br />
-                    <em>Figures</em>
+                    <em>Artwork</em>
                   </h2>
                 </Link>
               )}

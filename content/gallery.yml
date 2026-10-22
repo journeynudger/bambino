@@ -1,0 +1,267 @@
+# The gallery wall at /gallery — every painting, in the order it hangs.
+#
+# One entry per work. The page shows a work in white plaster until you hover,
+# then the painting itself; click it and the sheet on the right reads from the
+# fields below. Only the fields you fill in are shown — a blank `year` simply
+# never appears, so nothing on the wall is ever a guess.
+#
+#   slug     the URL: /gallery/<slug>                                   (required)
+#   file     the painting, under public/ — cut exactly to the canvas     (required)
+#            (scripts/canvas_crop.py does the cutting; scripts/relief.py
+#            then casts public/gallery/<slug>.webp, the white relief)
+#   title    as it hangs. The titles below are working titles taken from
+#            your file names — rename freely.
+#   year, medium, size, series
+#            the line under the title, e.g. 2024 · Acrylic on canvas · 36 × 36 in
+#   intro    the paragraph on the sheet
+#   notes    ABOUT THE WORK: short label + text, one per line of the column
+#   quote    IN HIS WORDS — a line of your own, in italics (optional)
+#
+# Contact for the ENQUIRE button lives at the bottom of this file.
+
+works:
+  - slug: misty-harbor
+    file: /art/misty-harbor.jpg
+    title: Misty Harbor in Charcoal and Ochre
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      A horizon, and almost nothing standing on it. Warm grey light at the top
+      cools and darkens toward a black ground, and in the band between them a
+      few marks keep their footing: a tall dark post, a long ochre bar bent at
+      one end like a hull, thin spars leaning across one another, drips of
+      gold and a single blue. The quiet is the subject; the marks are what
+      survives it.
+    notes:
+      - label: Ground
+        text: A gradient from pale warm grey to near black, laid in broad horizontal passes.
+      - label: Marks
+        text: Posts, spars and a bent ochre bar, with runs of yellow, white, blue and oxblood.
+      - label: Format
+        text: Square.
+    quote:
+
+  - slug: windows-in-red
+    file: /art/windows-in-red.jpg
+    title: Windows in Red
+    year:
+    medium:
+    size:
+    series: The window paintings
+    intro: >-
+      Nine rooms of colour, each with a window cut into it. The reds, oranges
+      and ochres are laid in square frames, brushed in two directions so every
+      frame has a weave to it, and through each opening a grey-blue sky is
+      scraped in with a knife. One red leaf has landed on the centre pane.
+      From across the room it is a façade at dusk; up close it is nine small
+      paintings sharing a wall.
+    notes:
+      - label: Structure
+        text: A three-by-three grid of frames, each holding a smaller window of cool grey.
+      - label: Palette
+        text: Cadmium reds and oranges, ochre, crimson, with grey-blue and black in the openings.
+      - label: Series
+        text: One of three window paintings, with Windows in Teal and Six Windows.
+    quote:
+
+  - slug: windows-in-teal
+    file: /art/windows-in-teal.jpg
+    title: Windows in Teal
+    year:
+    medium:
+    size:
+    series: The window paintings
+    intro: >-
+      The same nine-room plan as Windows in Red, turned toward water. Teal,
+      turquoise and deep green frames surround small warm panes — rose, coral,
+      a burnt orange — so each window holds a light left on. The central frame
+      is built up thick and scraped back until it looks mineral, like a
+      cross-section of something that was once molten. The lower rooms sink
+      into a blue-black.
+    notes:
+      - label: Structure
+        text: Three by three again, the frames in cool colours and the panes in warm ones.
+      - label: Surface
+        text: Heavy impasto in the centre square, thin washes at the edges.
+      - label: Series
+        text: One of three window paintings, with Windows in Red and Six Windows.
+    quote:
+
+  - slug: six-windows
+    file: /art/six-windows.jpg
+    title: Six Windows
+    year:
+    medium:
+    size:
+    series: The window paintings
+    intro: >-
+      Six frames in two rows, and this time something is outside. The upper
+      windows look out at a pale sky with a line of pink and orange trees; the
+      lower ones look inward, at a red field, a grey wash, a dark room with
+      violet light coming through it. Ochre, rose and green frames up top,
+      green and black below. It is the window painting that comes closest to
+      a view.
+    notes:
+      - label: Structure
+        text: Two rows of three; the top row looks out, the bottom row looks in.
+      - label: Palette
+        text: Ochre, dusty pink, teal green, black; sky blue and sunset tones in the panes.
+      - label: Series
+        text: One of three window paintings, with Windows in Red and Windows in Teal.
+    quote:
+
+  - slug: checkered
+    file: /art/checkered.jpg
+    title: Checkered
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      A chessboard coming apart on a white ground. Black and tan squares hold
+      their grid in the corners and loosen toward the middle, where they drift,
+      fade to ochre, and give way to a scribble of thin gold lines thrown
+      across the canvas. The pattern of the card table and the coffee-shop
+      floor, caught at the moment it stops being a pattern.
+    notes:
+      - label: Ground
+        text: White, with the squares in black, tan and ochre and a net of thin gold lines.
+      - label: Pattern
+        text: A checkerboard that holds at the corners and dissolves in the centre.
+    quote:
+
+  - slug: burgundy-rose
+    file: /art/burgundy-rose.jpg
+    title: Moody Burgundy Rose
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      A single rose, painted large and close, in the dark. The bloom is a
+      mass of burgundy and crimson built up stroke over stroke; its stem is
+      two sweeps of bottle green; above it a spray of small yellow flowers,
+      almost drawn rather than painted. The ground moves from lime green on the
+      left through near-black to a wall of orange and red on the right, with
+      white light breaking through at the edge.
+    notes:
+      - label: Subject
+        text: One rose, a sprig of yellow blossom, and a stem.
+      - label: Ground
+        text: Lime green, black and a vertical field of orange and red.
+      - label: Format
+        text: Tall — the canvas is twice as high as it is wide.
+    quote:
+
+  - slug: rose-bouquet
+    file: /art/rose-bouquet.jpg
+    title: Rose Bouquet
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      Seven roses on black, built in thick paint. A cream one at the heart,
+      opening to orange; a pink one above it and a red one below; two small
+      ones at the left in coral and crimson; at the right a dark plum rose,
+      closed, with a bud and a few mauve petals above. The leaves are laid in
+      with a knife, green over green. The black ground is painted too, and
+      keeps the marks of the brush.
+    notes:
+      - label: Subject
+        text: Seven roses with leaves and a bud, in cream, pink, red, coral and plum.
+      - label: Surface
+        text: Impasto throughout — the petals stand off the panel.
+      - label: Ground
+        text: Black, brushed; the work hangs in an antique gilt frame.
+    quote:
+
+  - slug: cobalt-diagonal
+    file: /art/cobalt-diagonal.jpg
+    title: Cobalt Diagonal
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      A diagonal of blue cuts the canvas from the lower left to the upper
+      right, and everything else is what that movement threw off: drops,
+      skids, flung white, a few dark passages where the brush ran dry. Three
+      blues — pale, cobalt, and a slate that reads as black — and white. It is
+      a painting of speed more than of anything the speed is passing.
+    notes:
+      - label: Movement
+        text: One diagonal sweep, with the splatter and drips it scattered.
+      - label: Palette
+        text: Pale blue, cobalt, slate grey and white.
+    quote:
+
+  - slug: mountain
+    file: /art/mountain.jpg
+    title: Mountain
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      A tall canvas in three registers. At the top, eight gold stars on a
+      night-blue field; through the middle, a broad salmon and copper form
+      folds over itself like a ridge seen from above, with a dark wedge and a
+      flash of yellow where it turns; at the bottom, green grass painted in
+      long crossing strokes and a wash of white and black at the foot. Flag,
+      mountain and meadow, stacked.
+    notes:
+      - label: Structure
+        text: Three bands — stars on blue, a folded copper ridge, a green ground.
+      - label: Palette
+        text: Navy, gold, salmon and copper, black, emerald, white.
+      - label: Format
+        text: Tall — almost twice as high as it is wide.
+    quote:
+
+  - slug: blue-and-pink
+    file: /art/blue-and-pink.jpg
+    title: Blue and Pink
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      Blue shapes outlined in pink, with the pink showing through everywhere
+      the blue is thin. Two eyes — or two moons — sit inside the loops, and a
+      row of pink triangles runs along the bottom like a border on cloth. It
+      is as flat as a print and as loose as a sketch at once.
+    notes:
+      - label: Palette
+        text: Cobalt and ultramarine blue over a pink ground, with black in the eyes.
+      - label: Pattern
+        text: Looping forms above, a row of triangles below.
+    quote:
+
+  - slug: bionic
+    file: /art/bionic.jpg
+    title: Bionic
+    year:
+    medium:
+    size:
+    series:
+    intro: >-
+      A face divided down the middle. The left half is painted in yellow and
+      red, the eye a red disc; the right half is grey and silver, mechanical,
+      with a blue lens for an eye. Thick blue and red paint is pressed on
+      around the head, and the whole thing sits on a black ground. Half of
+      who you are, half of what has been attached.
+    notes:
+      - label: Subject
+        text: A face, half flesh and half machine.
+      - label: Surface
+        text: Heavy impasto in blue and red around the head; the ground is matte black.
+    quote:
+
+# The ENQUIRE button on each sheet opens an email with the work's title in the
+# subject. Leave `email` blank and the button is not shown.
+contact:
+  email:
+  label: Enquire about this work

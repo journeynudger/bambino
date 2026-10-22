@@ -1,5 +1,75 @@
 [
   {
+    "file": "/art/misty-harbor.jpg",
+    "title": "Misty Harbor in Charcoal and Ochre",
+    "category": "painting",
+    "w": 1254,
+    "h": 1254
+  },
+  {
+    "file": "/art/windows-in-red.jpg",
+    "title": "Windows in Red",
+    "category": "painting",
+    "w": 2000,
+    "h": 1500
+  },
+  {
+    "file": "/art/windows-in-teal.jpg",
+    "title": "Windows in Teal",
+    "category": "painting",
+    "w": 2000,
+    "h": 1500
+  },
+  {
+    "file": "/art/six-windows.jpg",
+    "title": "Six Windows",
+    "category": "painting",
+    "w": 1080,
+    "h": 728
+  },
+  {
+    "file": "/art/checkered.jpg",
+    "title": "Checkered",
+    "category": "painting",
+    "w": 996,
+    "h": 787
+  },
+  {
+    "file": "/art/burgundy-rose.jpg",
+    "title": "Moody Burgundy Rose",
+    "category": "painting",
+    "w": 702,
+    "h": 1391
+  },
+  {
+    "file": "/art/cobalt-diagonal.jpg",
+    "title": "Cobalt Diagonal",
+    "category": "painting",
+    "w": 1188,
+    "h": 1324
+  },
+  {
+    "file": "/art/mountain.jpg",
+    "title": "Mountain",
+    "category": "painting",
+    "w": 818,
+    "h": 1511
+  },
+  {
+    "file": "/art/blue-and-pink.jpg",
+    "title": "Blue and Pink",
+    "category": "painting",
+    "w": 1400,
+    "h": 1044
+  },
+  {
+    "file": "/art/bionic.jpg",
+    "title": "Bionic",
+    "category": "painting",
+    "w": 1376,
+    "h": 1030
+  },
+  {
     "file": "/art/1.png",
     "title": "1",
     "category": "design",
@@ -70,66 +140,10 @@
     "h": 350
   },
   {
-    "file": "/art/10.png",
-    "title": "10",
-    "category": "painting",
-    "w": 1920,
-    "h": 1080
-  },
-  {
-    "file": "/art/11.png",
-    "title": "11",
-    "category": "painting",
-    "w": 1920,
-    "h": 1080
-  },
-  {
-    "file": "/art/12.png",
-    "title": "12",
-    "category": "painting",
-    "w": 1920,
-    "h": 1080
-  },
-  {
-    "file": "/art/13.png",
-    "title": "13",
-    "category": "painting",
-    "w": 1920,
-    "h": 1080
-  },
-  {
-    "file": "/art/Bambino_painting2.png",
-    "title": "Bambino_painting2",
-    "category": "painting",
-    "w": 3432,
-    "h": 2561
-  },
-  {
-    "file": "/art/Bambino_painting3.png",
-    "title": "Bambino_painting3",
-    "category": "painting",
-    "w": 3023,
-    "h": 3824
-  },
-  {
-    "file": "/art/Bambino_paintingbionic.png",
-    "title": "Bambino_paintingbionic",
-    "category": "painting",
-    "w": 3024,
-    "h": 4032
-  },
-  {
     "file": "/art/IMG_5663.jpg",
     "title": "IMG_5663",
     "category": "photo",
     "w": 1290,
     "h": 1599
-  },
-  {
-    "file": "/art/Lorenzo_headshot.jpg",
-    "title": "Lorenzo",
-    "category": "photo",
-    "w": 320,
-    "h": 396
   }
 ]

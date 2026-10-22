@@ -35,7 +35,7 @@ export default function SiteChrome({ posts }: { posts: PostMeta[] }) {
           href="/"
           className="mono-label pointer-events-auto bg-paper/90 px-2 py-1.5 !no-underline backdrop-blur-sm"
         >
-          [<span aria-hidden>▸</span>]&nbsp;BAMBINO&nbsp;[
+          [<span aria-hidden>▸</span>]&nbsp;LORENZO&nbsp;[
           <span data-progress>00</span>%]
         </Link>
         <button
@@ -118,11 +118,17 @@ export default function SiteChrome({ posts }: { posts: PostMeta[] }) {
             );
           })}
           <Link
+            href="/gallery"
+            className="border-b border-dotted border-paper/40 py-3 font-display text-2xl italic transition-all hover:pl-2"
+          >
+            The Gallery
+          </Link>
+          <Link
             href="/art"
             onClick={() => setOpen(false)}
             className="border-b border-dotted border-paper/40 py-3 font-display text-2xl italic transition-all hover:pl-2"
           >
-            Figures
+            Artwork
           </Link>
           <Link
             href="/podcast"
@@ -136,12 +142,12 @@ export default function SiteChrome({ posts }: { posts: PostMeta[] }) {
             onClick={() => setOpen(false)}
             className="border-b border-dotted border-paper/40 py-3 font-display text-2xl italic transition-all hover:pl-2"
           >
-            Colophon
+            About
           </Link>
         </nav>
 
         <div className="mono-label mt-auto pt-10 text-paper/50">
-          WORDS & ARTWORK — LORENZO SCARDICCHIO
+          ESSAYS & ARTWORK — LORENZO SCARDICCHIO
         </div>
       </aside>
     </>
