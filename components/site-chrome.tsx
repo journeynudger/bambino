@@ -68,16 +68,30 @@ export default function SiteChrome({ posts, plates }: { posts: PostMeta[]; plate
         <span className="chrome-pill"><span data-progress>00.00</span>%</span>
         <span className="chrome-sep" aria-hidden />
         <button
-          className="chrome-burger"
+          className={`book-icon${open ? " is-open" : ""}`}
           aria-label={open ? "Close index" : "Open index"}
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
         >
-          {open ? (
-            <svg viewBox="0 0 24 24" aria-hidden><rect x="2" y="2" width="20" height="20" /><path d="M7 7l10 10M17 7L7 17" /></svg>
-          ) : (
-            <svg viewBox="0 0 24 24" aria-hidden><path d="M2 6h20M2 12h20M2 18h20" /></svg>
-          )}
+          {/* the Almanack's book: closed on the shelf; its pages fan open as
+              you reach for it; an X in the open cover while the index is out */}
+          <svg viewBox="0 0 100 100" aria-hidden>
+            <g className="book-icon__closed">
+              <path className="book-icon__cover" d="M 100 58 L 30 58 C 30 58 10 58 10 76" />
+              <path className="book-icon__line1" d="M 100 76 L 30 76" />
+              <path className="book-icon__line2" d="M 100 76 L 30 76" />
+              <path className="book-icon__line3" d="M 100 76 L 30 76" />
+              <path className="book-icon__line4" d="M 100 76 L 30 76" />
+              <path className="book-icon__back" d="M 100 95 L 30 95 C 30 95 10 95 10 76" />
+            </g>
+            <g className="book-icon__open">
+              <path d="M 10 -50 L 10 58 C 10 58 10 58 10 76" />
+              <path d="M 30 25 L 60 55" />
+              <path d="M 80 25 L 30 75" />
+              <path d="M 80 75 L 60 55" />
+              <path d="M 100 95 L 30 95 C 30 95 10 95 10 76" />
+            </g>
+          </svg>
         </button>
       </div>
 

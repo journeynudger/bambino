@@ -207,24 +207,70 @@ body {
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
 }
-.chrome-burger {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 22px;
-  padding: 0;
+/* the book on the bar — the Almanack's icon, line for line. Desktop morphs
+   the closed book's paths (CSS `d`): hover fans the pages from the spine,
+   open sets an X inside the open cover. Under 900px, where `d` cannot be
+   animated, the closed and open drawings swap instead, as theirs do. */
+.book-icon {
+  width: 52px;
+  height: 40px;
+  margin: 0 -4px 0 0;
+  padding: 0 10px 10px 15px;
   border: 0;
   background: none;
   color: inherit;
   cursor: pointer;
+  display: block;
 }
-.chrome-burger svg {
-  width: 22px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
+.book-icon svg {
+  display: block;
+  width: 27px;
+  height: 27px;
+  overflow: visible;
 }
+.book-icon path {
+  stroke: #2d2d2d;
+  fill: transparent;
+  stroke-width: 3;
+}
+.book-icon__open {
+  display: none;
+}
+.book-icon__cover,
+.book-icon__line1,
+.book-icon__line2,
+.book-icon__line3,
+.book-icon__line4 {
+  transition: d 200ms;
+}
+.book-icon__cover { d: path("M 100 58 L 30 58 C 30 58 10 58 10 76"); }
+.book-icon__line1,
+.book-icon__line2,
+.book-icon__line3,
+.book-icon__line4 { d: path("M 100 76 L 30 76"); }
+.book-icon:hover .book-icon__cover,
+.book-icon.is-open .book-icon__cover { d: path("M 10 -50 L 10 58 C 10 58 10 58 10 76"); }
+.book-icon:hover .book-icon__line1 { d: path("M 30 0 L 30 76"); }
+.book-icon:hover .book-icon__line2 { d: path("M 67.5 10 L 30 76"); }
+.book-icon:hover .book-icon__line3 { d: path("M 95 38.5 L 30 76"); }
+.book-icon:hover .book-icon__line4 { d: path("M 100 76 L 30 76"); }
+.book-icon.is-open .book-icon__line1,
+.book-icon.is-open:hover .book-icon__line1 { d: path("M 30 25 L 60 55"); }
+.book-icon.is-open .book-icon__line2,
+.book-icon.is-open:hover .book-icon__line2,
+.book-icon.is-open .book-icon__line3,
+.book-icon.is-open:hover .book-icon__line3 { d: path("M 80 25 L 30 75"); }
+.book-icon.is-open .book-icon__line4,
+.book-icon.is-open:hover .book-icon__line4 { d: path("M 80 75 L 60 55"); }
+@media (max-width: 899px) {
+  .book-icon {
+    width: 44px;
+    padding: 0 6px 10px 11px;
+  }
+  .book-icon.is-open .book-icon__closed { display: none; }
+  .book-icon.is-open .book-icon__open { display: block; }
+}
+
 .chrome-toggle {
   border: 0;
   background: none;
