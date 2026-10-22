@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Checker from "@/components/checker";
-import DitherImage from "@/components/dither-image";
 import PaperPanel from "@/components/paper-panel";
 
 export const metadata: Metadata = {
   title: "About — Lorenzo Scardicchio",
-  description: "About Lorenzo Scardicchio and how this site is made.",
+  description: "Lorenzo Scardicchio, and what inspires the paintings and the essays.",
 };
 
 export default function AboutPage() {
@@ -27,11 +26,11 @@ export default function AboutPage() {
             <em>fig 00</em> — THE AUTHOR, SOMEWHERE WITH CHECKERED FLOORS
           </div>
           <div className="frame fig-hover relative" data-fx-drift="24" data-rot="-1.4">
-            <DitherImage
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/art/IMG_5663.jpg"
-              aspect="4 / 5"
-              colorBack="#e3e6d8"
-              colorFront="#464b36"
+              alt="Lorenzo Scardicchio, somewhere with checkered floors"
+              className="block aspect-[4/5] w-full object-cover"
             />
             <span className="fig-chip">
               <em>fig 00</em>—THE AUTHOR, SOMEWHERE WITH CHECKERED FLOORS
@@ -40,12 +39,9 @@ export default function AboutPage() {
         </div>
 
         <div>
-          <h1
-            className="font-display text-[clamp(2.6rem,6vw,4.6rem)] leading-[1] font-[400]"
-          >
+          <h1 className="font-display text-[clamp(2.6rem,6vw,4.6rem)] leading-[1] font-[400]">
             A Portrait <em>of</em>
-            <br />
-            Lorenzo Scardicchio
+            <span className="signature">Lorenzo Scardicchio</span>
           </h1>
 
           <div className="prose-book mt-10">
@@ -81,17 +77,35 @@ export default function AboutPage() {
       <section className="mx-auto mt-28 w-[min(860px,92vw)]">
         <PaperPanel tint="blue" className="px-7 py-9 sm:px-14 sm:py-12">
           <div className="mono-label pb-6">
-            <Checker /> &nbsp;HOW THIS SITE IS MADE
+            <Checker /> &nbsp;WHAT INSPIRES THE WORK
           </div>
           <div className="prose-book text-[1.02rem]">
             <p>
-              Display type is <em>Blacker Pro Display Light</em>, with{" "}
-              <em>Source Serif</em> for text and <em>Paper Mono</em> — the
-              open-source monospace by Paper — for everything that ticks.
-              Textures and dithering are drawn live in WebGL by Paper Shaders.
-              Built with Next.js and Tailwind, typeset like a book, and
-              designed after an evening spent reading Stripe Press editions
-              and wishing the web looked more like them.
+              I grew up in the back of a coffee shop. My family ran it, and most
+              of what I know about paying attention I learned there, from the
+              old-timers at the card table, who could read a whole hand in the
+              way a man set down his cup. The shuffle of the deck, the clink of
+              the cups, the long afternoon light on a checkered floor. I have
+              been trying to get that feeling into things ever since.
+            </p>
+            <p>
+              The paintings come from the same place. I paint quick and thick,
+              and I like a colour next to the one it isn&rsquo;t supposed to sit
+              beside. A window with a light left on. A rose on black. A
+              chessboard coming apart. I am not trying to make something pretty;
+              I am trying to make something that holds still long enough to be
+              looked at twice.
+            </p>
+            <p>
+              The essays are the other half of the same argument. I build
+              technology for a living, and I have spent years uncomfortably
+              close to the machines that farm human attention. So I write about
+              what they take, and about the slower things that give it back: a
+              phone face down on the table, a long walk, a partner who reminds
+              you that the body is the primary source and the ring is only the
+              interpreter. Charlie Munger taught me to look for the incentive.
+              The card players taught me to look for the tell. This whole site
+              is me trying to do both at once.
             </p>
           </div>
         </PaperPanel>
