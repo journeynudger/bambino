@@ -50,7 +50,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
 
   const wallRef = useRef<HTMLDivElement>(null);
   const latticeRef = useRef<HTMLDivElement>(null);
-  const sunRef = useRef<HTMLDivElement>(null);
   const focusRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
 
@@ -119,7 +118,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
-    sunTarget.current = { x: e.clientX, y: e.clientY, on: 1 };
     wake();
     const p = press.current;
     if (!p || p.id !== e.pointerId) return;
@@ -139,10 +137,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
     p.y = e.clientY;
     off.current = { x: off.current.x + dx, y: off.current.y + dy };
     apply();
-  };
-
-  const onPointerLeave = () => {
-    sunTarget.current.on = 0;
   };
 
   const onPointerUp = (e: React.PointerEvent) => {
@@ -181,27 +175,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
     wall.addEventListener("wheel", onWheel, { passive: true });
     return () => wall.removeEventListener("wheel", onWheel);
   }, [apply, open]);
-
-  // ── the pool of light that follows the pointer ─────────────────────────
-  const sunTarget = useRef({ x: -9999, y: -9999, on: 0 });
-  useEffect(() => {
-    if (!tile || mobile || reducedMotion()) return;
-    const sun = sunRef.current!;
-    const size = tile * 1.3;
-    sun.style.width = sun.style.height = `${size}px`;
-    let x = -9999, y = -9999, on = 0, raf = 0;
-    const loop = () => {
-      const t = sunTarget.current;
-      x += (t.x - x) * 0.12;
-      y += (t.y - y) * 0.12;
-      on += ((open ? 0 : t.on) - on) * 0.08;
-      sun.style.transform = `translate3d(${x - size / 2}px, ${y - size / 2}px, 0)`;
-      sun.style.opacity = String(on);
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [tile, mobile, open]);
 
   // ── the header steps back when the hand is still ───────────────────────
   const hideTimer = useRef<number | null>(null);
@@ -359,7 +332,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
-        onPointerLeave={onPointerLeave}
       >
         <div ref={latticeRef} className="lattice">
           {tiles.map(({ key, col, row, work }) => {
@@ -375,7 +347,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
                 aria-label={`Open ${work.title}`}
                 onKeyDown={(e) => onTileKey(e, work.slug)}
               >
-                <div className="glow" />
                 <figure className="plaque" style={{ width: box.width, height: box.height }}>
                   <img className="relief" src={work.relief} alt="" draggable={false} decoding="async" />
                   <img className="paint" src={work.file} alt={work.title} draggable={false} loading="lazy" decoding="async" />
@@ -387,7 +358,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
         </div>
       </div>
       <div className="grain" aria-hidden />
-      <div ref={sunRef} className="sun" aria-hidden />
 
       <div className={`veil${shown ? " show" : ""}`} onClick={() => closeWork()} />
 
@@ -398,7 +368,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
           style={{ left: focusBox.cx, top: focusBox.cy, width: focusBox.width, height: focusBox.height }}
           onClick={() => closeWork()}
         >
-          <div className="glow" />
           <figure className="plaque">
             <img className="relief" src={open.relief} alt="" draggable={false} />
             <img className="paint" src={open.file} alt={open.title} draggable={false} />

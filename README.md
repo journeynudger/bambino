@@ -62,18 +62,12 @@ tabIndex=0`, Enter/Space opens them, Escape closes. Position lives in a
 ref and is applied straight to the transform each frame; React re-renders
 only when the set of visible cells changes.
 
-**The light.** A fixed `.sun` div (diameter `1.3T`, `mix-blend-mode:
-plus-lighter`, a warm radial gradient) is lerped toward the pointer each
-frame (`p += (target - p) · 0.12`) and fades in/out (`· 0.08`); it is off
-on touch devices and under `prefers-reduced-motion`. Each tile also has a
-`.glow` (radial warm light, opacity 0) that comes up to 0.7 when the tile
-is the selected one.
-
 **Hover.** Every tile holds the work twice: `img.relief` (the white cast,
 always visible) and `img.paint` (the painting, opacity 0, 0.7s ease). The
 cast lifts 3px with a deeper drop-shadow and the paint fades to 1 on
 `:hover`, `:focus-visible` or `.lit`; the title (`.tile-name`, letter-spaced
-small caps) fades in under it.
+small caps) fades in under it. There is deliberately no spotlight or glow:
+the colour just appears.
 
 **Opening a work.** Click/tap/Enter: `pushState` to `/gallery/<slug>`; a
 `.veil` (paper colour, 95% opaque) fades in over the wall in 0.7s; a fixed
