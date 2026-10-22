@@ -45,7 +45,7 @@ export default function ArtPage() {
 
   return (
     <main className="pb-28">
-      <header className="mx-auto w-[min(1100px,94vw)] pt-20 lg:pt-6">
+      <header className="mx-auto w-[min(1100px,94vw)] pt-6">
         <div className="mono-label flex items-center justify-between border-b border-ink-2 pb-3">
           <span className="inline-flex items-center gap-3">
             <Checker /> [ ARTWORK ]

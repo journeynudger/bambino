@@ -27,7 +27,7 @@ data-attributes, reconstructed from the Almanack bundle:
 | --- | --- |
 | `data-fx-header` | chapter opening blurs `8px·e` and fades out over the first viewport (`e = scrollY/vh`) |
 | `data-fx-parallax` | collage children drift upward at staggered speeds with fixed rotations |
-| `data-fx-unroll` | parchment panel unrolls — the roll cylinder travels down, clip-path reveals content (`--unroll` 0→1) |
+| `data-fx-rollup` | parchment sheet pins under the chrome and rolls up at scroll speed — the page slides beneath it (`--rolled` 0→1) |
 | `data-fx-reveal` | cosine-eased fade/rise on entering the viewport |
 | `data-fx-drift` | gentle positional parallax for sticky figures |
 | `data-progress` | reading-progress percentage in the bottom bar |

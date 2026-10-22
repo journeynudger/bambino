@@ -13,9 +13,9 @@ export default function Cover() {
     <main>
       {/* the opaque page sheet — scrolls up and away, revealing the pinned spread */}
       <div className="paper-sheet paper-sheet--lifting relative z-[1] pb-10">
-        {/* ————— cover: the title, and the preamble unrolling right under it ————— */}
+        {/* ————— cover: the title, and the preamble sheet right under it ————— */}
         <header data-fx-header className="relative">
-          <div className="mono-label flex items-center justify-center gap-3 px-4 pt-16 lg:pt-5">
+          <div className="mono-label flex items-center justify-center gap-3 px-4 pt-6">
             <Checker />
             <span>[ A JOURNAL OF ESSAYS & ARTWORK ]</span>
             <Checker />
@@ -31,14 +31,17 @@ export default function Cover() {
               <a href="#essays" className="underline decoration-dotted underline-offset-4 hover:text-ink">ESSAYS</a>
               {" & "}
               <Link href="/gallery" className="underline decoration-dotted underline-offset-4 hover:text-ink">ARTWORK</Link>
-              {" BY LORENZO SCARDICCHIO"}
+            </p>
+            <p className="byline mt-1">
+              <span className="by">by</span>
+              <Link href="/about" className="signature-inline">Lorenzo Scardicchio</Link>
             </p>
           </div>
         </header>
 
         {/* ————— preamble ————— */}
         <section className="relative z-10 mx-auto mt-14 mb-32 w-[min(820px,92vw)]">
-          <PaperPanel tint="green" className="px-7 py-9 sm:px-14 sm:py-12">
+          <PaperPanel tint="pink" className="px-7 pt-14 pb-24 sm:px-11 sm:pt-24 sm:pb-36">
             <div className="mono-label flex items-start justify-between gap-6 pb-8">
               <span className="inline-flex items-center gap-3">
                 <Checker />
@@ -56,7 +59,7 @@ export default function Cover() {
             <pre className="ascii" aria-hidden>
               {ascii.preamble}
             </pre>
-            <div className="prose-book mt-8 text-[1.05rem]">
+            <div className="sheet-prose mt-8">
               <p>
                 Behind every feed refresh there is a design decision, and behind
                 every design decision there is a wager about what a human being

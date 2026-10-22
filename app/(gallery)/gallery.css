@@ -461,6 +461,7 @@ img { display: block; }
   .panel-label { font-size: 20px; }
   .hdr-nav { gap: 16px; }
   .hdr-nav a { font-size: 10px; letter-spacing: 0.12em; padding: 4px 0; }
+  .hdr-nav .hdr-more { display: none; }
 
   .panel {
     top: auto;

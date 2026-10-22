@@ -227,7 +227,7 @@ export default async function PostPage({
       return (
         <section
           key={i}
-          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[0.9fr_1px_1.1fr] lg:gap-14"
+          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[0.9fr_32px_1.1fr] lg:gap-14"
         >
           <div>
             <div
@@ -246,7 +246,7 @@ export default async function PostPage({
       return (
         <section
           key={i}
-          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[1.1fr_1px_0.9fr] lg:gap-14"
+          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[1.1fr_32px_0.9fr] lg:gap-14"
         >
           <div>{prose}</div>
           <div className="gutter-rule hidden lg:block" />
@@ -286,7 +286,7 @@ export default async function PostPage({
 
         {/* preamble scroll */}
         <section className="relative z-10 mx-auto -mt-[14svh] mb-28 w-[min(860px,92vw)] sm:ml-auto sm:mr-[4vw]">
-          <PaperPanel tint={tint} className="px-7 py-9 sm:px-14 sm:py-12">
+          <PaperPanel tint={tint} className="px-7 pt-14 pb-24 sm:px-11 sm:pt-24 sm:pb-36">
             <div className="mono-label flex items-start justify-between gap-6 pb-8">
               <span className="inline-flex items-center gap-3">
                 <Checker />
@@ -304,14 +304,14 @@ export default async function PostPage({
             <pre className="ascii" aria-hidden>
               {ascii.preamble}
             </pre>
-            <div className="prose-book mt-8 text-[1.05rem]">
+            <div className="sheet-prose mt-8">
               <p>{post.subtitle || post.description}</p>
             </div>
           </PaperPanel>
         </section>
 
         {/* running head */}
-        <div className="mx-auto w-[min(1300px,94vw)] pt-14 lg:pt-0">
+        <div className="mx-auto w-[min(1300px,94vw)] pt-8">
           <div className="mono-label flex items-center justify-between gap-4 border-b border-dotted border-ink-2/40 pb-3">
             <span className="inline-flex items-center gap-3">
               <Checker />

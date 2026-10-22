@@ -131,6 +131,395 @@ body {
   }
 }
 
+/* ————— the chrome: a top bar on every page, like the Almanack's ————— */
+:root {
+  --chrome-top: 36px;
+}
+.chrome {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  height: var(--chrome-top);
+  padding: 0 14px;
+  background: #efefef;
+  font-family: var(--font-paper-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #2d2d2d;
+  user-select: none;
+}
+.chrome-top {
+  top: 0;
+}
+.chrome-bottom {
+  bottom: 0;
+  height: 32px;
+  border-top: 1px solid rgba(45, 45, 45, 0.2);
+  justify-content: space-between;
+}
+.chrome-sig {
+  font-family: var(--font-longhand), "Bradley Hand", cursive;
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: #2d2d2d;
+  transform: rotate(-1.5deg);
+  transform-origin: left center;
+  padding-top: 3px;
+  white-space: nowrap;
+}
+.chrome-sep {
+  flex: none;
+  width: 0;
+  height: 14px;
+  border-left: 1px dotted rgba(45, 45, 45, 0.8);
+  margin: 0 10px;
+}
+.chrome-item {
+  white-space: nowrap;
+}
+.chrome-title {
+  max-width: 30ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chrome-grow {
+  flex: 1;
+}
+.chrome-links {
+  display: flex;
+  align-items: center;
+}
+.chrome-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.chrome-pill {
+  border: 1px solid #2d2d2d;
+  border-radius: 999px;
+  padding: 1px 8px 0;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.chrome-burger {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.chrome-burger svg {
+  width: 22px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+.chrome-toggle {
+  border: 0;
+  background: none;
+  padding: 2px 6px;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.chrome-toggle.is-open {
+  background: #2d2d2d;
+  color: #efefef;
+}
+@media (max-width: 1023px) {
+  .chrome-desk {
+    display: none;
+  }
+  .chrome {
+    padding: 0 10px;
+  }
+}
+
+/* the dotted hairlines that frame every page, as the Almanack rules its spreads */
+.page-rules {
+  position: fixed;
+  top: var(--chrome-top);
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.page-rules::before,
+.page-rules::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dotted rgba(45, 45, 45, 0.3);
+}
+.page-rules::before {
+  left: 18px;
+}
+.page-rules::after {
+  right: 18px;
+}
+@media (max-width: 1023px) {
+  .page-rules::before { left: 8px; }
+  .page-rules::after { right: 8px; }
+}
+
+/* ————— the index: an open book ————— */
+.book {
+  position: fixed;
+  top: var(--chrome-top);
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  z-index: 55;
+  display: grid;
+  grid-template-columns: 1fr 32px 1fr;
+  padding: 0 18px;
+  background: #efefef;
+  color: #2d2d2d;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s 0.35s;
+}
+.book.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+body.book-open {
+  overflow: hidden;
+}
+.book-page {
+  padding: 28px 26px 48px;
+  border-left: 1px dotted rgba(0, 0, 0, 0.2);
+  min-height: 100%;
+}
+.book-page--right {
+  border-right: 1px dotted rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+.book-gutter {
+  border-left: 1px dotted rgba(0, 0, 0, 0.133);
+  border-right: 1px dotted rgba(0, 0, 0, 0.133);
+}
+.book-label {
+  font-family: "Old Claude LP", "Blacker Pro Display", var(--font-display-serif), Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  margin: 0 0 10px;
+}
+.book-label em {
+  font-style: italic;
+  text-transform: none;
+}
+.book-numerals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  font-family: "Old Claude LP", "Blacker Pro Display", var(--font-display-serif), Georgia, serif;
+  font-size: clamp(3.6rem, 7.3vw, 6.6rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+.book-cell {
+  display: inline-flex;
+  align-items: baseline;
+}
+.book-numerals .slash {
+  margin: 0 0.05em;
+  opacity: 0.9;
+}
+.book-num {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.05em;
+  z-index: 0;
+}
+.book-num span {
+  position: relative;
+  z-index: 1;
+}
+.book-num.is-current,
+.book-num.is-hover {
+  color: #efefef;
+  font-style: italic;
+}
+.book-num.is-current::before,
+.book-num.is-hover::before {
+  content: "";
+  position: absolute;
+  inset: 0.06em -0.06em 0.02em;
+  background: #2d2d2d;
+  transform: skewX(-12deg);
+  z-index: 0;
+}
+.book-preview {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: start;
+  margin-top: 30px;
+}
+.book-hl {
+  font-family: "Old Claude LP", "Blacker Pro Display", var(--font-display-serif), Georgia, serif;
+  font-size: clamp(1.6rem, 2.7vw, 2.5rem);
+  line-height: 1.08;
+  background: #2d2d2d;
+  color: #efefef;
+  padding: 0 0.18em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.book-sub {
+  display: block;
+  margin-top: 14px;
+  max-width: 44ch;
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.45;
+  opacity: 0.8;
+}
+.book-meta {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--font-paper-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.book-preview-fig {
+  width: 150px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1px solid rgba(45, 45, 45, 0.3);
+}
+.book-item {
+  display: block;
+  margin-top: 20px;
+  font-family: "Old Claude LP", "Blacker Pro Display", var(--font-display-serif), Georgia, serif;
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+.book-item > span:first-child {
+  display: inline-block;
+}
+.book-item:hover > span:first-child {
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 1px;
+}
+.book-item--r {
+  text-align: right;
+}
+.book-plates {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.book-plates img {
+  width: 76px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 1px solid rgba(45, 45, 45, 0.25);
+}
+.book-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-top: auto;
+  padding-top: 56px;
+}
+.book-small {
+  display: block;
+  font-family: "Old Claude LP", "Blacker Pro Display", var(--font-display-serif), Georgia, serif;
+  font-size: 1.7rem;
+  line-height: 1.08;
+}
+.book-small:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.book-formats {
+  text-align: right;
+}
+@media (max-width: 1023px) {
+  .book {
+    grid-template-columns: 1fr;
+    padding: 0 8px;
+  }
+  .book-gutter {
+    display: none;
+  }
+  .book-page {
+    padding: 22px 16px 36px;
+    min-height: 0;
+    border-right: 1px dotted rgba(0, 0, 0, 0.2);
+  }
+  .book-numerals {
+    font-size: clamp(3.2rem, 16vw, 5.6rem);
+  }
+  .book-preview {
+    grid-template-columns: 1fr;
+  }
+  .book-preview-fig {
+    width: 120px;
+  }
+}
+
+/* ————— the cover's byline: "by" and the name in his hand ————— */
+.byline {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.55rem;
+  color: var(--color-ink-2);
+}
+.byline .by {
+  font-family: "Old Claude LP", "Blacker Pro Display", var(--font-display-serif), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+}
+.signature-inline {
+  display: inline-block;
+  font-family: var(--font-longhand), "Bradley Hand", cursive;
+  font-weight: 600;
+  font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+  transform: rotate(-1.5deg);
+  padding: 0.1em 0.15em 0.12em;
+}
+
 /* ————— the cover's name, in Lorenzo's own hand (Lorenzo Longhand, Inkwell nib) ————— */
 .wordmark {
   font-family: var(--font-longhand), "Bradley Hand", cursive;
@@ -483,49 +872,89 @@ html.reading-sans .prose-book blockquote {
   opacity: 0.9;
 }
 
-/* ————— unrolling parchment (tinted preamble paper) ————— */
-.unroll {
+/* ————— the parchment that rolls up (preamble sheets) ————— */
+/* Measured from the Almanack: the sheet is #f0cdc9, padded 100/44/144/36,
+   pinned under the chrome; its foot retreats at scroll speed while the
+   chapter slides up beneath it. The wrapper is given twice the sheet's
+   height by ScrollFX (and a matching negative margin), which is the room the
+   sheet stays pinned for; --rolled is how far it has gone. */
+.rollup {
   position: relative;
-  --unroll: 1;
+  --rolled: 0;
 }
-.unroll-clip {
+.rollup-pin {
+  position: sticky;
+  top: var(--chrome-top, 0px);
+  z-index: 20;
+}
+.rollup-sheet {
   position: relative;
   container-type: inline-size;
-  clip-path: inset(-60px -60px calc((1 - var(--unroll)) * 100%) -60px);
+  border-radius: 0 0 0 28px;
+  clip-path: inset(0 0 calc(var(--rolled) * 100%) 0);
 }
 /* the 145-col preamble art must never overflow its parchment */
-.unroll-clip .ascii {
+.rollup-sheet .ascii {
   font-size: min(0.48rem, 1.08cqi);
 }
-.unroll-roll {
+.rollup-roll {
+  --roll-h: clamp(40px, 4.6vw, 66px);
   position: absolute;
-  left: -14px;
-  right: -6px;
-  top: calc(var(--unroll) * 100% - 13px);
-  height: 26px;
-  border-radius: 13px;
+  left: calc(-0.5 * var(--roll-h));
+  right: -10px;
+  top: calc((1 - var(--rolled)) * 100% - var(--roll-h) / 2);
+  height: var(--roll-h);
+  border-radius: calc(var(--roll-h) / 2);
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--panel-tint) 88%, #fff) 0%,
-    var(--panel-tint) 42%,
-    color-mix(in srgb, var(--panel-tint) 70%, #000) 100%
+    color-mix(in srgb, var(--panel-tint) 74%, #fff) 0%,
+    color-mix(in srgb, var(--panel-tint) 92%, #fff) 28%,
+    var(--panel-tint) 56%,
+    color-mix(in srgb, var(--panel-tint) 82%, #000) 100%
   );
-  box-shadow: 0 10px 22px rgba(17, 17, 17, 0.22);
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.16), 0 2px 4px rgba(17, 17, 17, 0.1);
   z-index: 3;
+  pointer-events: none;
 }
-.unroll-roll::before {
+/* the rolled end of the sheet, seen from the side */
+.rollup-roll::before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
-  width: 26px;
-  height: 26px;
+  width: var(--roll-h);
+  height: var(--roll-h);
   border-radius: 50%;
   background: radial-gradient(
-    circle at 40% 40%,
-    color-mix(in srgb, var(--panel-tint) 55%, #fff),
-    color-mix(in srgb, var(--panel-tint) 65%, #000)
+    circle at 50% 50%,
+    color-mix(in srgb, var(--panel-tint) 58%, #fff) 0 16%,
+    var(--panel-tint) 19% 28%,
+    color-mix(in srgb, var(--panel-tint) 78%, #fff) 31% 46%,
+    color-mix(in srgb, var(--panel-tint) 86%, #000) 49% 58%,
+    color-mix(in srgb, var(--panel-tint) 76%, #fff) 61% 100%
   );
+  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.12), 1px 0 2px rgba(0, 0, 0, 0.12);
+}
+
+/* the prose on a sheet: the Almanack's 18/23 justified, indented, no gaps */
+.sheet-prose {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 18px;
+  line-height: 1.28;
+  text-align: justify;
+  text-indent: 60px;
+  hyphens: auto;
+  color: #2d2d2d;
+  font-variant-numeric: lining-nums;
+}
+.sheet-prose p + p {
+  margin-top: 0;
+}
+@media (max-width: 640px) {
+  .sheet-prose {
+    font-size: 16px;
+    text-indent: 40px;
+  }
 }
 
 /* ————— ascii art ————— */
@@ -602,11 +1031,7 @@ html.reading-sans .prose-book blockquote {
 
 /* thin dashed vertical column rules, book-gutter style */
 .gutter-rule {
-  background-image: linear-gradient(
-    to bottom,
-    rgba(45, 45, 45, 0.35) 40%,
-    transparent 40%
-  );
-  background-size: 1px 6px;
-  width: 1px;
+  width: 32px;
+  border-left: 1px dotted rgba(0, 0, 0, 0.133);
+  border-right: 1px dotted rgba(0, 0, 0, 0.133);
 }

@@ -318,7 +318,10 @@ export default function Wall({ works, contact, initialSlug }: Props) {
           Lorenzo Scardicchio
         </Link>
         <nav className="hdr-nav" aria-label="Site">
-          <Link href="/">Notebooks</Link>
+          <Link href="/">Home</Link>
+          <Link href="/#essays" className="hdr-more">Essays</Link>
+          <Link href="/art">Artwork</Link>
+          <Link href="/podcast" className="hdr-more">Podcast</Link>
           <Link href="/about">About</Link>
           {contact.email && <a href={`mailto:${contact.email}`}>Enquire</a>}
         </nav>

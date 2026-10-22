@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import "../globals.css";
 import ScrollFX from "@/components/scroll-fx";
 import SiteChrome from "@/components/site-chrome";
-import { getPostIndex } from "@/lib/content";
+import { getArt, getPostIndex } from "@/lib/content";
 
 // display face: a free revival of Claude Garamond's types (true italic),
 // standing in for a licensed Old Claude / Blacker Pro if those are dropped in
@@ -51,14 +51,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const posts = getPostIndex();
+  // three of the quieter paintings, for the index's right-hand page
+  const QUIET = ["/art/misty-harbor.jpg", "/art/six-windows.jpg", "/art/mountain.jpg"];
+  const plates = getArt().filter((a) => QUIET.includes(a.file)).map((a) => ({ file: a.file, title: a.title }));
   return (
     <html lang="en">
       <body
-        className={`${ebGaramond.variable} ${sourceSerif.variable} ${paperMono.variable} ${longhand.variable}`}
+        className={`${ebGaramond.variable} ${sourceSerif.variable} ${paperMono.variable} ${longhand.variable} pt-9`}
       >
         <ScrollFX />
+        <div className="page-rules" aria-hidden />
         {children}
-        <SiteChrome posts={posts} />
+        <SiteChrome posts={posts} plates={plates} />
       </body>
     </html>
   );

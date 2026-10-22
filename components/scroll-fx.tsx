@@ -27,7 +27,26 @@ export default function ScrollFX() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(pointer: fine)");
 
-    // static state: no blur/fade/parallax/drift, everything visible & unrolled
+    // a chapter remembers where you are in its URL (?progress=12.34%), and
+    // opens there again — as the Almanack does
+    const onChapter = () => window.location.pathname.startsWith("/posts/");
+    let urlTimer = 0;
+    const syncUrl = () => {
+      if (!onChapter()) return;
+      const p = clamp01(window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight));
+      const q = `?progress=${(p * 100).toFixed(2)}%`;
+      if (window.location.search !== q) window.history.replaceState(null, "", q + window.location.hash);
+    };
+    const onScrollUrl = () => { window.clearTimeout(urlTimer); urlTimer = window.setTimeout(syncUrl, 250); };
+    window.addEventListener("scroll", onScrollUrl, { passive: true });
+    const remembered = parseFloat(new URLSearchParams(window.location.search).get("progress") || "");
+    if (onChapter() && remembered > 0) {
+      window.setTimeout(() => {
+        window.scrollTo(0, (remembered / 100) * (document.documentElement.scrollHeight - window.innerHeight));
+      }, 350);
+    }
+
+    // static state: no blur/fade/parallax/drift, everything visible, every sheet flat
     const settleStatic = () => {
       document
         .querySelectorAll<HTMLElement>("[data-fx-header]")
@@ -50,9 +69,11 @@ export default function ScrollFX() {
           el.style.transform = `rotate(${el.dataset.rot ?? "0"}deg)`;
         });
       document
-        .querySelectorAll<HTMLElement>("[data-fx-unroll]")
+        .querySelectorAll<HTMLElement>("[data-fx-rollup]")
         .forEach((el) => {
-          el.style.removeProperty("--unroll");
+          el.style.height = "";
+          el.style.marginBottom = "";
+          el.style.removeProperty("--rolled");
         });
       document
         .querySelectorAll<HTMLElement>("[data-fx-reveal]")
@@ -80,7 +101,7 @@ export default function ScrollFX() {
         document
           .querySelectorAll<HTMLElement>("[data-progress]")
           .forEach((el) => {
-            el.textContent = String(Math.round(rProg * 100)).padStart(2, "0");
+            el.textContent = (rProg * 100).toFixed(2).padStart(5, "0");
           });
         return;
       }
@@ -118,16 +139,21 @@ export default function ScrollFX() {
         });
 
       document
-        .querySelectorAll<HTMLElement>("[data-fx-unroll]")
+        .querySelectorAll<HTMLElement>("[data-fx-rollup]")
         .forEach((el) => {
+          const pin = el.firstElementChild as HTMLElement | null;
+          if (!pin) return;
+          const h = pin.offsetHeight;
+          // the sheet stays pinned for one sheet-height of scrolling; the
+          // page slides up under it in that room
+          const room = `${h * 2}px`;
+          if (el.style.height !== room) {
+            el.style.height = room;
+            el.style.marginBottom = `${-h}px`;
+          }
+          const pinTop = parseFloat(getComputedStyle(pin).top) || 0;
           const r = el.getBoundingClientRect();
-          const start = vh * 0.92;
-          const dist = Math.min(r.height * 1.5, vh * 0.7);
-          // panels already well inside the viewport (short pages) open fully
-          const p =
-            r.top < vh * 0.4 ? 1 : clamp01((start - r.top) / dist);
-          const eased = 1 - Math.cos(p * (Math.PI / 2));
-          el.style.setProperty("--unroll", String(0.12 + 0.88 * eased));
+          el.style.setProperty("--rolled", String(clamp01((pinTop - r.top) / h)));
         });
 
       document
@@ -165,7 +191,7 @@ export default function ScrollFX() {
       document
         .querySelectorAll<HTMLElement>("[data-progress]")
         .forEach((el) => {
-          el.textContent = String(Math.round(prog * 100)).padStart(2, "0");
+          el.textContent = (prog * 100).toFixed(2).padStart(5, "0");
         });
     };
 
@@ -250,6 +276,8 @@ export default function ScrollFX() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("scroll", onScrollUrl);
+      window.clearTimeout(urlTimer);
       document.removeEventListener("mousemove", onMove);
       reduceMotion.removeEventListener("change", onScroll);
       if (raf) cancelAnimationFrame(raf);
