@@ -34,9 +34,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
+  const firstLine = post.sections[0]?.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
   return {
     title: `${post.title} — Lorenzo Scardicchio`,
-    description: post.subtitle || post.description,
+    description: post.subtitle || post.description || firstLine,
   };
 }
 
@@ -53,6 +54,7 @@ export default async function PostPage({
   const { prev, next } = getAdjacent(slug);
   const ascii = getAscii();
   const tint = TINTS[n % TINTS.length];
+  const deck = post.subtitle || post.description;
 
   const runningHead = `CH. ${n} // ${post.title.toUpperCase()}`;
 
@@ -207,9 +209,11 @@ export default async function PostPage({
             <pre className="ascii" aria-hidden>
               {ascii.preamble}
             </pre>
-            <div className="sheet-prose mt-8">
-              <p>{post.subtitle || post.description}</p>
-            </div>
+            {deck && (
+              <div className="sheet-prose mt-8">
+                <p>{deck}</p>
+              </div>
+            )}
           </PaperPanel>
         </section>
 

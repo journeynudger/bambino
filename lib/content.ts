@@ -55,12 +55,20 @@ export type Artwork = {
 
 const root = process.cwd();
 
+/** The export sometimes filed "Read time: 4 min 40 sec" as a description. It is not one. */
+const READ_TIME = /^\s*Read(?:ing)? time\b/i;
+const scrub = (s: string | undefined | null) => (s && !READ_TIME.test(s) ? s : "");
+
 export function getPostIndex(): PostMeta[] {
   const raw = fs.readFileSync(
     path.join(root, "content", "posts", "index.json"),
     "utf8"
   );
-  const posts = JSON.parse(raw) as PostMeta[];
+  const posts = (JSON.parse(raw) as PostMeta[]).map((p) => ({
+    ...p,
+    subtitle: scrub(p.subtitle),
+    description: scrub(p.description),
+  }));
   // newest first, chapter numbers assigned oldest = 1
   return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
@@ -77,6 +85,8 @@ export function getPost(slug: string): Post {
     "utf8"
   );
   const post = JSON.parse(raw) as Post;
+  post.subtitle = scrub(post.subtitle);
+  post.description = scrub(post.description);
 
   const lifted = liftLead(cleanBody(post.bodyHtml, post), post.cover);
   post.leadImage = lifted.lead;
