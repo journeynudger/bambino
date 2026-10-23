@@ -8,10 +8,12 @@ import type { Contact, Work } from "@/lib/gallery";
 /**
  * The wall. An endless lattice of square tiles on paper, each holding one
  * painting cast in white; drag or scroll it in any direction and it goes on.
- * Hover (or focus) a tile and the colour comes up into the cast and the title
- * appears under it. Open one — click, tap, Enter — and the wall veils over,
- * the painting lifts from its tile to the centre and fills in with colour,
- * and the sheet slides in from the right to read.
+ * One painting is always lit — in colour, with its title under it. On
+ * arrival it is the first work in the gallery file, centred. A mouse lights
+ * whatever it rests on; a finger lights what it taps. A click or tap on the
+ * lit painting opens it: the wall veils over, the painting lifts from its
+ * tile to the centre, and the sheet slides in to read. So on a phone it is
+ * tap to see, tap again to read.
  *
  * The lattice repeats the works along a diagonal, so a window a few tiles
  * wide never shows the same painting twice side by side. Positions live in
@@ -23,8 +25,13 @@ type Props = { works: Work[]; contact: Contact; initialSlug: string | null };
 
 const MOBILE = 768;
 const PLAQUE = 0.74;          // the painting's longer side, as a share of its tile
-const DRAG_THRESHOLD = 6;     // px of movement before a press becomes a drag
-const FRICTION = 0.94;
+const SLOP = { mouse: 5, touch: 12, pen: 8 } as const;  // px of movement before a press becomes a drag
+const TAP_MS = 500;           // a press held longer than this is not a tap
+const MAX_FLICK = 1.8;        // px/ms — the fastest glide a release can start
+const STILL_MS = 80;          // a finger that stopped this long before lifting does not glide
+const FRICTION = { mouse: 0.94, touch: 0.92, pen: 0.93 } as const;
+type PointerKind = keyof typeof SLOP;
+const kindOf = (t: string): PointerKind => (t === "touch" || t === "pen" ? t : "mouse");
 
 const mod = (a: number, n: number) => ((a % n) + n) % n;
 
@@ -62,7 +69,11 @@ export default function Wall({ works, contact, initialSlug }: Props) {
   const [open, setOpen] = useState<Work | null>(() => works.find((w) => w.slug === initialSlug) ?? null);
   const [shown, setShown] = useState(false);          // the focus + panel are visible
   const [fromRect, setFromRect] = useState<DOMRect | null>(null);
-  const [litSlug, setLitSlug] = useState<string | null>(null);
+  // the one lit painting, by lattice cell (a work recurs along the diagonal,
+  // and only one of its casts should light): the cell the wall opens on is
+  // (home, 0) — the deep-linked work if there is one, else the first in the file
+  const home = Math.max(0, works.findIndex((w) => w.slug === initialSlug));
+  const [lit, setLit] = useState<string | null>(() => (works.length ? `${home},0` : null));
 
   // every cast is fetched once at mount — they are small, and a tile must
   // never sit on the wall as an empty plaque while its relief arrives
@@ -78,13 +89,13 @@ export default function Wall({ works, contact, initialSlug }: Props) {
     return () => window.removeEventListener("resize", measure);
   }, []);
 
-  // start with the first work a little in from the top-left, like a wall you walked up to
+  // start with the home cell in the centre of the wall
   const started = useRef(false);
   useLayoutEffect(() => {
     if (!tile || started.current) return;
     started.current = true;
-    off.current = { x: Math.round(viewport.vw / 2 - tile * 1.5), y: Math.round(viewport.vh / 2 - tile) };
-  }, [tile, viewport]);
+    off.current = { x: Math.round((viewport.vw - tile) / 2) - home * tile, y: Math.round((viewport.vh - tile) / 2) };
+  }, [tile, viewport, home]);
 
   const apply = useCallback(() => {
     const el = latticeRef.current;
@@ -101,7 +112,10 @@ export default function Wall({ works, contact, initialSlug }: Props) {
   useLayoutEffect(apply, [apply]);
 
   // ── drag, inertia, wheel ───────────────────────────────────────────────
-  const press = useRef<{ x: number; y: number; id: number; dragged: boolean; vx: number; vy: number; t: number } | null>(null);
+  const press = useRef<{
+    x: number; y: number; id: number; kind: PointerKind; dragged: boolean;
+    vx: number; vy: number; t: number; t0: number;
+  } | null>(null);
   const inertia = useRef<number | null>(null);
 
   const stopInertia = () => {
@@ -112,7 +126,10 @@ export default function Wall({ works, contact, initialSlug }: Props) {
   const onPointerDown = (e: React.PointerEvent) => {
     if (open || e.button !== 0) return;
     stopInertia();
-    press.current = { x: e.clientX, y: e.clientY, id: e.pointerId, dragged: false, vx: 0, vy: 0, t: e.timeStamp };
+    press.current = {
+      x: e.clientX, y: e.clientY, id: e.pointerId, kind: kindOf(e.pointerType),
+      dragged: false, vx: 0, vy: 0, t: e.timeStamp, t0: e.timeStamp,
+    };
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
@@ -120,15 +137,17 @@ export default function Wall({ works, contact, initialSlug }: Props) {
     if (!p || p.id !== e.pointerId) return;
     const dx = e.clientX - p.x;
     const dy = e.clientY - p.y;
-    if (!p.dragged && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+    if (!p.dragged && Math.hypot(dx, dy) < SLOP[p.kind]) return;
     if (!p.dragged) {
       p.dragged = true;
       wallRef.current?.classList.add("dragging");
       wallRef.current?.setPointerCapture(e.pointerId);
     }
-    const dt = Math.max(1, e.timeStamp - p.t);
-    p.vx = dx / dt;
-    p.vy = dy / dt;
+    // velocity is smoothed over the last few moves, so one jittery final
+    // sample (a finger rolling as it lifts) cannot throw the wall across the room
+    const dt = Math.max(4, e.timeStamp - p.t);
+    p.vx = p.vx * 0.6 + (dx / dt) * 0.4;
+    p.vy = p.vy * 0.6 + (dy / dt) * 0.4;
     p.t = e.timeStamp;
     p.x = e.clientX;
     p.y = e.clientY;
@@ -142,16 +161,23 @@ export default function Wall({ works, contact, initialSlug }: Props) {
     wallRef.current?.classList.remove("dragging");
     if (!p) return;
     if (!p.dragged) {
-      const el = (e.target as HTMLElement).closest<HTMLElement>("[data-slug]");
-      if (el) openWork(el.dataset.slug!, el);
+      // a tap on a painting: light it, or open it if it is the lit one already
+      if (e.timeStamp - p.t0 > TAP_MS) return;
+      const el = (e.target as HTMLElement).closest<HTMLElement>(".plaque")?.closest<HTMLElement>("[data-slug]");
+      if (!el) return;
+      if (el.dataset.cell === lit) openWork(el.dataset.slug!, el);
+      else setLit(el.dataset.cell!);
       return;
     }
-    if (reducedMotion()) return;
-    // let it glide
-    let vx = p.vx * 16, vy = p.vy * 16;
+    if (reducedMotion() || e.timeStamp - p.t > STILL_MS) return;
+    // let it glide, but never faster than a real flick
+    const speed = Math.hypot(p.vx, p.vy);
+    const k = speed > MAX_FLICK ? MAX_FLICK / speed : 1;
+    const friction = FRICTION[p.kind];
+    let vx = p.vx * k * 16, vy = p.vy * k * 16;
     const step = () => {
-      vx *= FRICTION;
-      vy *= FRICTION;
+      vx *= friction;
+      vy *= friction;
       if (Math.abs(vx) < 0.08 && Math.abs(vy) < 0.08) { inertia.current = null; return; }
       off.current = { x: off.current.x + vx, y: off.current.y + vy };
       apply();
@@ -182,14 +208,13 @@ export default function Wall({ works, contact, initialSlug }: Props) {
     const plaque = from?.querySelector<HTMLElement>(".plaque");
     setFromRect(plaque ? plaque.getBoundingClientRect() : null);
     setOpen(w);
-    setLitSlug(slug);
+    if (from?.dataset.cell) setLit(from.dataset.cell);
     window.history.pushState({ slug }, "", `/gallery/${slug}`);
     document.title = `${w.title} — Lorenzo Scardicchio`;
   }, [works]);
 
   const closeWork = useCallback((push = true) => {
     setShown(false);
-    setLitSlug(null);
     if (push) window.history.pushState({}, "", "/gallery");
     document.title = "Lorenzo Scardicchio — Paintings";
     window.setTimeout(() => setOpen(null), reducedMotion() ? 0 : 700);
@@ -235,7 +260,7 @@ export default function Wall({ works, contact, initialSlug }: Props) {
       const slug = e.state?.slug as string | undefined;
       if (slug) {
         const w = works.find((x) => x.slug === slug);
-        if (w) { setFromRect(null); setOpen(w); setLitSlug(slug); }
+        if (w) { setFromRect(null); setOpen(w); }
       } else {
         closeWork(false);
       }
@@ -313,15 +338,23 @@ export default function Wall({ works, contact, initialSlug }: Props) {
             return (
               <div
                 key={key}
-                className={`tile${litSlug === work.slug ? " lit" : ""}`}
+                className={`tile${lit === key ? " lit" : ""}`}
                 style={{ transform: `translate(${col * tile}px, ${row * tile}px)`, width: tile, height: tile }}
                 data-slug={work.slug}
+                data-cell={key}
                 role="button"
                 tabIndex={open ? -1 : 0}
                 aria-label={`Open ${work.title}`}
                 onKeyDown={(e) => onTileKey(e, work.slug)}
               >
-                <figure className="plaque" style={{ width: box.width, height: box.height }}>
+                <figure
+                  className="plaque"
+                  style={{ width: box.width, height: box.height }}
+                  onPointerEnter={(e) => {
+                    // a mouse lights what it rests on; a finger lights by tapping (see onPointerUp)
+                    if (e.pointerType === "mouse" && !open && !press.current?.dragged) setLit(key);
+                  }}
+                >
                   <img className="relief" src={work.relief} alt="" draggable={false} decoding="async" />
                   <img className="paint" src={work.file} alt={work.title} draggable={false} loading="lazy" decoding="async" />
                 </figure>
@@ -352,7 +385,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
 
       <aside className={`panel${shown ? " open" : ""}`} aria-label="About this work" aria-hidden={!shown}>
         <div className="panel-head">
-          <span className="panel-label">Lorenzo Scardicchio</span>
           <button className="panel-x" onClick={() => closeWork()} aria-label="Close">
             <svg viewBox="0 0 256 256" aria-hidden><path d="M204.24,195.76a6,6,0,1,1-8.48,8.48L128,136.49,60.24,204.24a6,6,0,0,1-8.48-8.48L119.51,128,51.76,60.24a6,6,0,0,1,8.48-8.48L128,119.51l67.76-67.75a6,6,0,0,1,8.48,8.48L136.49,128Z" /></svg>
           </button>

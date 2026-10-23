@@ -2,8 +2,9 @@ import Checker from "@/components/checker";
 import { displayTitle } from "@/lib/typo";
 
 /**
- * Full-viewport chapter opening: mono running head and the giant display
- * title, nothing else — the whole header blurs out as you scroll.
+ * The chapter opening: mono running head and the display title, nothing
+ * else, sized to what it holds so the preamble sheet follows straight under
+ * the title on every screen. The whole header blurs out as you scroll.
  */
 export default function ChapterHeader({
   kicker,
@@ -17,11 +18,8 @@ export default function ChapterHeader({
   byline?: string;
 }) {
   return (
-    <header className="relative h-[108svh]">
-      <div
-        data-fx-header
-        className="sticky top-0 flex h-[100svh] flex-col overflow-hidden"
-      >
+    <header className="relative">
+      <div data-fx-header className="flex flex-col pb-[7svh] sm:pb-[9svh]">
         {/* running head */}
         <div className="mono-label flex items-center justify-between gap-4 px-4 pt-4 sm:px-8">
           <span className="inline-flex items-center gap-3">
@@ -36,7 +34,7 @@ export default function ChapterHeader({
         </div>
 
         {/* title */}
-        <div className="relative z-10 mx-auto mt-[16svh] w-full max-w-5xl px-4 text-center sm:px-8">
+        <div className="relative z-10 mx-auto mt-[8svh] w-full max-w-5xl px-4 text-center sm:mt-[12svh] sm:px-8">
           <h1
             className="font-display text-[clamp(2.6rem,8.5vw,7rem)] leading-[1.02] font-[400] tracking-[-0.015em]"
           >
@@ -44,10 +42,6 @@ export default function ChapterHeader({
           </h1>
         </div>
 
-        {/* scroll cue */}
-        <div className="mono-label absolute bottom-16 left-1/2 -translate-x-1/2 text-ink-2/70">
-          SCROLL&nbsp;↓
-        </div>
       </div>
     </header>
   );

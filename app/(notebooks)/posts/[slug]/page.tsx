@@ -68,10 +68,13 @@ export default async function PostPage({
       />
     ) : null;
 
+    // one rhythm for every spread; the first sits close under the running head
+    const pad = i === 0 ? "pt-4 pb-14 sm:pt-6 sm:pb-16" : "py-12 sm:py-16";
+
     if (!section.figure) {
       if (!prose) return null;
       return (
-        <section key={i} className="mx-auto w-[min(720px,92vw)] py-16">
+        <section key={i} className={`mx-auto w-[min(720px,92vw)] ${pad}`}>
           {prose}
         </section>
       );
@@ -128,7 +131,7 @@ export default async function PostPage({
       return (
         <section
           key={i}
-          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[0.9fr_32px_1.1fr] lg:gap-14"
+          className={`mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-8 ${pad} lg:grid-cols-[0.9fr_32px_1.1fr] lg:gap-14`}
         >
           <div>
             <div
@@ -147,7 +150,7 @@ export default async function PostPage({
       return (
         <section
           key={i}
-          className="mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-10 py-16 lg:grid-cols-[1.1fr_32px_0.9fr] lg:gap-14"
+          className={`mx-auto grid w-[min(1300px,94vw)] grid-cols-1 gap-8 ${pad} lg:grid-cols-[1.1fr_32px_0.9fr] lg:gap-14`}
         >
           <div>{prose}</div>
           <div className="gutter-rule hidden lg:block" />
@@ -163,12 +166,12 @@ export default async function PostPage({
     }
 
     return (
-      <section key={i} className="mx-auto w-[min(1100px,94vw)] py-16">
+      <section key={i} className={`mx-auto w-[min(1100px,94vw)] ${pad}`}>
         <div className={crossing ? "relative z-[1] lg:-mt-28" : undefined}>
           {figure}
         </div>
         {prose && (
-          <div className="mx-auto mt-12 w-[min(720px,100%)]">{prose}</div>
+          <div className="mx-auto mt-8 w-[min(720px,100%)] sm:mt-10">{prose}</div>
         )}
       </section>
     );
@@ -184,8 +187,8 @@ export default async function PostPage({
           runningHead={runningHead}
         />
 
-        {/* preamble scroll */}
-        <section className="relative z-10 mx-auto -mt-[14svh] mb-28 w-[min(860px,92vw)] sm:ml-auto sm:mr-[4vw]">
+        {/* preamble scroll, straight under the title */}
+        <section className="relative z-10 mx-auto mb-16 w-[min(860px,92vw)] sm:mb-20 sm:ml-auto sm:mr-[4vw]">
           <PaperPanel tint={tint} className="px-7 pt-14 pb-24 sm:px-11 sm:pt-24 sm:pb-36">
             <div className="mono-label flex items-start justify-between gap-6 pb-8">
               <span className="inline-flex items-center gap-3">
@@ -220,19 +223,9 @@ export default async function PostPage({
             <span className="hidden sm:inline">BY LORENZO SCARDICCHIO</span>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <ReadingControls />
           </div>
-        </div>
-
-        {/* chapter title */}
-        <div className="mx-auto w-[min(720px,92vw)]">
-          <h2
-            className="mt-12 mb-16 font-display text-[clamp(2rem,4.5vw,3.2rem)] leading-[1.05] font-[400]"
-            data-fx-reveal
-          >
-            {post.title}
-          </h2>
         </div>
 
         {/* spreads, divided by full-bleed hairlines the figures straddle */}
