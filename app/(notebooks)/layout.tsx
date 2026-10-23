@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { EB_Garamond, Source_Serif_4 } from "next/font/google";
 import localFont from "next/font/local";
 import "../globals.css";
+import "../chrome.css";
 import ScrollFX from "@/components/scroll-fx";
 import SiteChrome from "@/components/site-chrome";
 import { getArt, getPostIndex } from "@/lib/content";

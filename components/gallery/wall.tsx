@@ -25,7 +25,6 @@ const MOBILE = 768;
 const PLAQUE = 0.74;          // the painting's longer side, as a share of its tile
 const DRAG_THRESHOLD = 6;     // px of movement before a press becomes a drag
 const FRICTION = 0.94;
-const HIDE_HEADER_AFTER = 3600;
 
 const mod = (a: number, n: number) => ((a % n) + n) % n;
 
@@ -51,7 +50,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
   const wallRef = useRef<HTMLDivElement>(null);
   const latticeRef = useRef<HTMLDivElement>(null);
   const focusRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLElement>(null);
 
   const [viewport, setViewport] = useState({ vw: 0, vh: 0 });
   const tile = viewport.vw ? tileSize(viewport.vw, viewport.vh) : 0;
@@ -118,7 +116,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
-    wake();
     const p = press.current;
     if (!p || p.id !== e.pointerId) return;
     const dx = e.clientX - p.x;
@@ -176,19 +173,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
     return () => wall.removeEventListener("wheel", onWheel);
   }, [apply, open]);
 
-  // ── the header steps back when the hand is still ───────────────────────
-  const hideTimer = useRef<number | null>(null);
-  const wake = useCallback(() => {
-    headerRef.current?.classList.remove("away");
-    if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    hideTimer.current = window.setTimeout(() => {
-      if (!open) headerRef.current?.classList.add("away");
-    }, HIDE_HEADER_AFTER);
-  }, [open]);
-  useEffect(() => {
-    wake();
-    return () => { if (hideTimer.current) window.clearTimeout(hideTimer.current); };
-  }, [wake]);
 
   // ── open / close ───────────────────────────────────────────────────────
   const openWork = useCallback((slug: string, from?: HTMLElement | null) => {
@@ -313,19 +297,6 @@ export default function Wall({ works, contact, initialSlug }: Props) {
 
   return (
     <>
-      <header ref={headerRef} className="hdr">
-        <Link href="/gallery" className="hdr-title" onClick={(e) => { if (open) { e.preventDefault(); closeWork(); } }}>
-          Lorenzo Scardicchio
-        </Link>
-        <nav className="hdr-nav" aria-label="Site">
-          <Link href="/">Home</Link>
-          <Link href="/#essays" className="hdr-more">Essays</Link>
-          <Link href="/art">Artwork</Link>
-          <Link href="/podcast" className="hdr-more">Podcast</Link>
-          <Link href="/about">About</Link>
-          {contact.email && <a href={`mailto:${contact.email}`}>Enquire</a>}
-        </nav>
-      </header>
 
       <div
         ref={wallRef}

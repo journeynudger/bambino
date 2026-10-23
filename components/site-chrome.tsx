@@ -19,7 +19,19 @@ export type Plate = { file: string; title: string };
  * pages, sliding in from the right — the cover, the essays each with its
  * plate, then the gallery, the artwork, the podcast and about.
  */
-export default function SiteChrome({ posts, plates }: { posts: PostMeta[]; plates: Plate[] }) {
+export default function SiteChrome({
+  posts,
+  plates,
+  context = "The Notebooks",
+  bar = "full",
+}: {
+  posts: PostMeta[];
+  plates: Plate[];
+  /** what the bar says you are in, when not inside a chapter */
+  context?: string;
+  /** "top": the top bar and the index only — no bottom bar, no progress (the gallery) */
+  bar?: "full" | "top";
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const total = posts.length;
@@ -51,7 +63,7 @@ export default function SiteChrome({ posts, plates }: { posts: PostMeta[]; plate
             <span className="chrome-item chrome-title chrome-desk">{current.post.title}</span>
           </>
         ) : (
-          <span className="chrome-item chrome-desk">The Notebooks</span>
+          <span className="chrome-item chrome-desk">{context}</span>
         )}
         <span className="chrome-grow" />
         {!current && (
@@ -65,8 +77,12 @@ export default function SiteChrome({ posts, plates }: { posts: PostMeta[]; plate
           </nav>
         )}
         <span className="chrome-sep" aria-hidden />
-        <span className="chrome-pill"><span data-progress>00.00</span>%</span>
-        <span className="chrome-sep" aria-hidden />
+        {bar === "full" && (
+          <>
+            <span className="chrome-pill"><span data-progress>00.00</span>%</span>
+            <span className="chrome-sep" aria-hidden />
+          </>
+        )}
         <button
           className={`book-icon${open ? " is-open" : ""}`}
           aria-label={open ? "Close index" : "Open index"}
@@ -95,15 +111,17 @@ export default function SiteChrome({ posts, plates }: { posts: PostMeta[]; plate
         </button>
       </div>
 
-      {/* ——— the bottom bar ——— */}
-      <div className="chrome chrome-bottom">
-        <Link href="/" className="chrome-item" onClick={close}>
-          [<span aria-hidden>▸</span>]&nbsp;Lorenzo Scardicchio
-        </Link>
-        <button className={`chrome-item chrome-toggle${open ? " is-open" : ""}`} onClick={() => setOpen((o) => !o)}>
-          {open ? "Close index [>]" : "Open index [<]"}
-        </button>
-      </div>
+      {/* ——— the bottom bar: only where there is reading to measure ——— */}
+      {bar === "full" && (
+        <div className="chrome chrome-bottom">
+          <Link href="/" className="chrome-item" onClick={close}>
+            [<span aria-hidden>▸</span>]&nbsp;Lorenzo Scardicchio
+          </Link>
+          <button className={`chrome-item chrome-toggle${open ? " is-open" : ""}`} onClick={() => setOpen((o) => !o)}>
+            {open ? "Close index [>]" : "Open index [<]"}
+          </button>
+        </div>
+      )}
 
       {/* ——— the index: one clean list, on paper, from the right ——— */}
       <div className={`index-veil${open ? " is-open" : ""}`} onClick={close} aria-hidden />
